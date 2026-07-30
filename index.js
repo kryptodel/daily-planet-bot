@@ -318,15 +318,13 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-client.login(process.env.TOKEN);
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
-  if (message.content.toUpperCase() === 'SHAZAM!') {
-    const shazamGif = 'https://tenor.com/i7lsG6HigHo.gif';
 
+  if (message.content.toUpperCase() === 'SHAZAM!') {
     await message.reply({
       content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
-      files: [shazamGif]
+      files: ['dc-animated.gif']
     });
   }
 });
