@@ -47,10 +47,10 @@ client.once('ready', async () => {
       .addUserOption(opt => opt.setName('person1').setDescription('Spouse 1').setRequired(true))
       .addUserOption(opt => opt.setName('person2').setDescription('Spouse 2').setRequired(true)),
 
-new SlashCommandBuilder()
-  .setName('lantern')
-  .setDescription('Find out which Lantern Corps you would belong to.'),
-    
+    new SlashCommandBuilder()
+      .setName('lantern')
+      .setDescription('Find out which Lantern Corps you would belong to.'),
+
     new SlashCommandBuilder()
       .setName('news')
       .setDescription('Publish a news article on the Daily Planet')
@@ -142,8 +142,7 @@ client.on('interactionCreate', async interaction => {
     const embed = new EmbedBuilder()
       .setColor(0xff69b4)
       .setTitle(`${emoji} Compatibility Analysis — Daily Planet`)
-.setDescription(
-  `**${p1.username}** ❤️ **${p2.username}**\n\n**Compatibility:** ${percentage}%\n\n${phrase}`)
+      .setDescription(`**\( {p1.username}** ❤️ ** \){p2.username}**\n\n**Compatibility:** \( {percentage}%\n\n \){phrase}`)
       .setFooter({ text: 'Research conducted by the Daily Planet gossip department' });
 
     await interaction.reply({ embeds: [embed] });
@@ -156,8 +155,7 @@ client.on('interactionCreate', async interaction => {
     const embed = new EmbedBuilder()
       .setColor(0xffd700)
       .setTitle('💒 Official Daily Planet Ceremony')
-       .setDescription(
-  `Today, before the readers of Metropolis...\n\n**${p1}** and **${p2}**\n\nare officially **married** by the power vested in this bot!\n\nMay your love be stronger than kryptonite 💚`)
+      .setDescription(`Today, before the readers of Metropolis...\n\n**\( {p1}** and ** \){p2}**\n\nare officially **married** by the power vested in this bot!\n\nMay your love be stronger than kryptonite 💚`)
       .setFooter({ text: 'Certificate issued by the Daily Planet • Metropolis' })
       .setTimestamp();
 
@@ -190,7 +188,7 @@ client.on('interactionCreate', async interaction => {
 
     await interaction.reply({ embeds: [embed] });
   }
-  
+
   if (commandName === 'breaking') {
     const title = interaction.options.getString('title');
 
@@ -203,7 +201,7 @@ client.on('interactionCreate', async interaction => {
 
     await interaction.reply({ content: '@here', embeds: [embed] });
   }
-  
+
   if (commandName === 'reporter') {
     const roles = [
       'Investigative Reporter',
@@ -220,12 +218,12 @@ client.on('interactionCreate', async interaction => {
     const embed = new EmbedBuilder()
       .setColor(0x00aa00)
       .setTitle('📋 Contract Signed!')
-      .setDescription(`Congratulations, **${interaction.user.username}**!\n\nYou have just been hired as:\n\n### ${role}\n\nof the **Daily Planet**.\n\nWelcome to the team. Don\'t disappoint Perry White.`)
+      .setDescription(`Congratulations, **${interaction.user.username}**!\n\nYou have just been hired as:\n\n### ${role}\n\nof the **Daily Planet**.\n\nWelcome to the team. Don't disappoint Perry White.`)
       .setFooter({ text: 'Digitally signed by Perry White' });
 
     await interaction.reply({ embeds: [embed] });
   }
-  
+
   if (commandName === '8ball') {
     const question = interaction.options.getString('question');
 
@@ -271,7 +269,6 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [embed] });
   }
 
-  
   if (commandName === 'supercomputer') {
     const query = interaction.options.getString('query');
 
@@ -317,7 +314,7 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [embed] });
   }
 
-if (commandName === 'lantern') {
+  if (commandName === 'lantern') {
     const corps = [
       {
         name: 'Green Lantern Corps',
@@ -418,9 +415,8 @@ if (commandName === 'lantern') {
       embed.setImage(null);
       await interaction.reply({ embeds: [embed] });
     }
-        }
-
-  });
+  }
+});
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
@@ -464,6 +460,5 @@ client.on('messageCreate', async (message) => {
     }
   }
 });
-
 
 client.login(process.env.TOKEN);
