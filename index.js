@@ -271,6 +271,7 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [embed] });
   }
 
+  
   if (commandName === 'supercomputer') {
     const query = interaction.options.getString('query');
 
@@ -314,49 +315,6 @@ client.on('interactionCreate', async interaction => {
       .setTimestamp();
 
     await interaction.reply({ embeds: [embed] });
-  }
-});
-
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isButton()) return;
-  if (interaction.customId === 'congratulate') {
-    await interaction.reply({ content: `🎉 ${interaction.user} congratulated the couple!`, ephemeral: false });
-  }
-});
-
-client.on('messageCreate', async (message) => {
-  if (message.author.bot) return;
-
-  if (message.content.toUpperCase() === 'SHAZAM!') {
-    try {
-      const embed = new EmbedBuilder()
-        .setColor(0xFFD700)
-        .setTitle('⚡ SHAZAM! ⚡')
-        .setDescription(`**${message.author}** said the magic word and transformed!`)
-        .setImage('attachment://dc-animated.gif')
-        .setFooter({ 
-          text: 'The power of Shazam has been unleashed', 
-          iconURL: message.author.displayAvatarURL({ dynamic: true }) 
-        })
-        .setTimestamp();
-
-      await message.reply({
-        embeds: [embed],
-        files: ['dc-animated.gif']
-      });
-
-    } catch (error) {
-      console.error('Error sending SHAZAM:', error);
-      
-      const fallbackEmbed = new EmbedBuilder()
-        .setColor(0xFFD700)
-        .setTitle('⚡ SHAZAM! ⚡')
-        .setDescription(`**${message.author}** said the magic word and transformed!`)
-        .setFooter({ text: 'The power of Shazam has been unleashed' })
-        .setTimestamp();
-
-      await message.reply({ embeds: [fallbackEmbed] });
-    }
   }
 });
 
@@ -462,5 +420,49 @@ if (commandName === 'lantern') {
     await interaction.reply({ embeds: [embed] });
   }
 }
+
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isButton()) return;
+  if (interaction.customId === 'congratulate') {
+    await interaction.reply({ content: `🎉 ${interaction.user} congratulated the couple!`, ephemeral: false });
+  }
+});
+
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+
+  if (message.content.toUpperCase() === 'SHAZAM!') {
+    try {
+      const embed = new EmbedBuilder()
+        .setColor(0xFFD700)
+        .setTitle('⚡ SHAZAM! ⚡')
+        .setDescription(`**${message.author}** said the magic word and transformed!`)
+        .setImage('attachment://dc-animated.gif')
+        .setFooter({ 
+          text: 'The power of Shazam has been unleashed', 
+          iconURL: message.author.displayAvatarURL({ dynamic: true }) 
+        })
+        .setTimestamp();
+
+      await message.reply({
+        embeds: [embed],
+        files: ['dc-animated.gif']
+      });
+
+    } catch (error) {
+      console.error('Error sending SHAZAM:', error);
+      
+      const fallbackEmbed = new EmbedBuilder()
+        .setColor(0xFFD700)
+        .setTitle('⚡ SHAZAM! ⚡')
+        .setDescription(`**${message.author}** said the magic word and transformed!`)
+        .setFooter({ text: 'The power of Shazam has been unleashed' })
+        .setTimestamp();
+
+      await message.reply({ embeds: [fallbackEmbed] });
+    }
+  }
+});
+
 
 client.login(process.env.TOKEN);
