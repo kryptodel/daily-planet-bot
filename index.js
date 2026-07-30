@@ -15,7 +15,11 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds]
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
 });
 
 client.once('ready', async () => {
@@ -315,3 +319,14 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(process.env.TOKEN);
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+  if (message.content.toUpperCase() === 'SHAZAM!') {
+    const shazamGif = 'https://media.tenor.com/your-shazam-gif-link.gif';
+
+    await message.reply({
+      content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
+      files: [shazamGif]
+    });
+  }
+});
