@@ -18,9 +18,69 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-client.once('ready', () => {
+client.once('ready', async () => {
   console.log(`🗞️ Daily Planet is online as ${client.user.tag}`);
   client.user.setActivity('Daily Planet • Metropolis', { type: 3 });
+
+  const { REST, Routes, SlashCommandBuilder } = require('discord.js');
+
+  const commands = [
+    new SlashCommandBuilder()
+      .setName('headline')
+      .setDescription('Create an official Daily Planet headline')
+      .addStringOption(opt => opt.setName('title').setDescription('Headline title').setRequired(true))
+      .addStringOption(opt => opt.setName('content').setDescription('Article content').setRequired(true)),
+
+    new SlashCommandBuilder()
+      .setName('ship')
+      .setDescription('Calculate the compatibility between two people')
+      .addUserOption(opt => opt.setName('person1').setDescription('First person').setRequired(true))
+      .addUserOption(opt => opt.setName('person2').setDescription('Second person').setRequired(true)),
+
+    new SlashCommandBuilder()
+      .setName('marry')
+      .setDescription('Marry two people in the Daily Planet')
+      .addUserOption(opt => opt.setName('person1').setDescription('Spouse 1').setRequired(true))
+      .addUserOption(opt => opt.setName('person2').setDescription('Spouse 2').setRequired(true)),
+
+    new SlashCommandBuilder()
+      .setName('news')
+      .setDescription('Publish a news article on the Daily Planet')
+      .addStringOption(opt => opt.setName('title').setDescription('News title').setRequired(true))
+      .addStringOption(opt => opt.setName('content').setDescription('News content').setRequired(true)),
+
+    new SlashCommandBuilder()
+      .setName('breaking')
+      .setDescription('Announce urgent breaking news')
+      .addStringOption(opt => opt.setName('title').setDescription('Breaking news title').setRequired(true)),
+
+    new SlashCommandBuilder()
+      .setName('reporter')
+      .setDescription('Get hired as a Daily Planet reporter'),
+
+    new SlashCommandBuilder()
+      .setName('8ball')
+      .setDescription('Ask a question and the magic 8-ball will answer')
+      .addStringOption(opt => opt.setName('question').setDescription('Your question').setRequired(true)),
+
+    new SlashCommandBuilder()
+      .setName('supercomputer')
+      .setDescription('Consult the Fortress of Solitude supercomputer')
+      .addStringOption(opt => opt.setName('query').setDescription('What do you want to consult?').setRequired(true)),
+  ].map(cmd => cmd.toJSON());
+
+  const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+
+  try {
+    console.log('Registering slash commands...');
+    await rest.put(
+      Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
+      { body: commands }
+    );
+    console.log('Slash commands registered successfully!');
+  } catch (error) {
+    console.error('Error registering commands:', error);
+  }
 });
 
 client.on('interactionCreate', async interaction => {
