@@ -322,9 +322,14 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
   if (message.content.toUpperCase() === 'SHAZAM!') {
-    await message.reply({
-      content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
-      files: ['dc-animated.gif']
-    });
+    try {
+      await message.reply({
+        content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
+        files: ['dc-animated.gif']
+      });
+    } catch (error) {
+      console.error('Error sending SHAZAM:', error);
+      await message.reply('⚡ **SHAZAM!** ⚡ (GIF failed to load)');
+    }
   }
 });
