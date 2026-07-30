@@ -316,7 +316,6 @@ client.on('interactionCreate', async interaction => {
 
     await interaction.reply({ embeds: [embed] });
   }
-});
 
 if (commandName === 'lantern') {
   const corps = [
@@ -420,6 +419,7 @@ if (commandName === 'lantern') {
     await interaction.reply({ embeds: [embed] });
   }
 }
+  });
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
