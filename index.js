@@ -320,16 +320,13 @@ client.on('interactionCreate', async interaction => {
 
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
-
   if (message.content.toUpperCase() === 'SHAZAM!') {
-    try {
-      await message.reply({
-        content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
-        files: ['dc-animated.gif']
-      });
-    } catch (error) {
-      console.error('Error sending SHAZAM:', error);
-      await message.reply('⚡ **SHAZAM!** ⚡\n(GIF failed to load)');
-    }
+
+    const shazamGif = 'https://tenor.com/pt-BR/view/dc-animated-batman-batb-brave-and-the-bold-gif-7515550034633410740';
+
+    await message.reply({
+      content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
+      files: [shazamGif]
+    });
   }
 });
