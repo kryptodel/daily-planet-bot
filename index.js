@@ -319,21 +319,20 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ content: `🎉 ${interaction.user} congratulated the couple!`, ephemeral: false });
   }
 });
-
-// ==================== SHAZAM! ====================
 client.on('messageCreate', async (message) => {
-  // Ignore messages from bots
   if (message.author.bot) return;
 
-  // Check if the message is exactly "SHAZAM!" (case-insensitive)
   if (message.content.toUpperCase() === 'SHAZAM!') {
-    
-    // Replace this with your preferred GIF link
-    const shazamGif = 'https://tenor.com/pt-BR/view/dc-animated-batman-batb-brave-and-the-bold-gif-7515550034633410740';
-
-    await message.reply({
-      content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
-      files: [shazamGif]
-    });
+    try {
+      await message.reply({
+        content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
+        files: ['dc-animated.gif']
+      });
+    } catch (error) {
+      console.error('Error sending SHAZAM:', error);
+      await message.reply('⚡ **SHAZAM!** ⚡\n(GIF failed to load)');
+    }
   }
 });
+
+client.login(process.env.TOKEN);
