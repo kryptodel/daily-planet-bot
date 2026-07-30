@@ -138,7 +138,8 @@ client.on('interactionCreate', async interaction => {
     const embed = new EmbedBuilder()
       .setColor(0xff69b4)
       .setTitle(`${emoji} Compatibility Analysis — Daily Planet`)
-      .setDescription(`**\( {p1.username}** ❤️ ** \){p2.username}**\n\n**Compatibility: \( {percentage}%**\n\n \){phrase}`)
+.setDescription(
+  `**${p1.username}** ❤️ **${p2.username}**\n\n**Compatibility:** ${percentage}%\n\n${phrase}`)
       .setFooter({ text: 'Research conducted by the Daily Planet gossip department' });
 
     await interaction.reply({ embeds: [embed] });
@@ -151,7 +152,8 @@ client.on('interactionCreate', async interaction => {
     const embed = new EmbedBuilder()
       .setColor(0xffd700)
       .setTitle('💒 Official Daily Planet Ceremony')
-      .setDescription(`Today, before the readers of Metropolis...\n\n**\( {p1}** and ** \){p2}**\n\nare officially **married** by the power vested in this bot!\n\nMay your love be stronger than kryptonite 💚`)
+       .setDescription(
+  `Today, before the readers of Metropolis...\n\n**${p1}** and **${p2}**\n\nare officially **married** by the power vested in this bot!\n\nMay your love be stronger than kryptonite 💚`)
       .setFooter({ text: 'Certificate issued by the Daily Planet • Metropolis' })
       .setTimestamp();
 
