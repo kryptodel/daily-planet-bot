@@ -329,7 +329,7 @@ client.on('messageCreate', async (message) => {
       });
     } catch (error) {
       console.error('Error sending SHAZAM:', error);
-      await message.reply('⚡ **SHAZAM!** ⚡ (GIF failed to load)');
+      await message.reply('⚡ **SHAZAM!** ⚡\n(GIF failed to load)');
     }
   }
 });
