@@ -322,7 +322,7 @@ client.login(process.env.TOKEN);
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
   if (message.content.toUpperCase() === 'SHAZAM!') {
-    const shazamGif = 'https://media.tenor.com/your-shazam-gif-link.gif';
+    const shazamGif = 'https://tenor.com/i7lsG6HigHo.gif';
 
     await message.reply({
       content: `⚡ **SHAZAM!** ⚡\n${message.author} has transformed!`,
