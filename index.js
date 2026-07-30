@@ -47,6 +47,10 @@ client.once('ready', async () => {
       .addUserOption(opt => opt.setName('person1').setDescription('Spouse 1').setRequired(true))
       .addUserOption(opt => opt.setName('person2').setDescription('Spouse 2').setRequired(true)),
 
+new SlashCommandBuilder()
+  .setName('lantern')
+  .setDescription('Find out which Lantern Corps you would belong to.'),
+    
     new SlashCommandBuilder()
       .setName('news')
       .setDescription('Publish a news article on the Daily Planet')
@@ -355,5 +359,108 @@ client.on('messageCreate', async (message) => {
     }
   }
 });
+
+if (commandName === 'lantern') {
+  const corps = [
+    {
+      name: 'Green Lantern Corps',
+      color: 0x00ff00,
+      emoji: '🟢',
+      gif: 'green-lantern.gif',
+      message: 'The ring has scanned your willpower... and found it unbreakable. You have been selected to protect Sector 2814 and beyond.',
+      oath: `In brightest day, in blackest night,\nNo evil shall escape my sight.\nLet those who worship evil's might,\nBeware my power—Green Lantern's light!`
+    },
+    {
+      name: 'Sinestro Corps',
+      color: 0xffff00,
+      emoji: '🟡',
+      gif: 'sinestro.gif',
+      message: 'Fear is the purest emotion. The yellow ring has chosen you to spread terror across the stars in the name of order.',
+      oath: `In blackest day, in brightest night,\nBeware your fears made into light.\nLet those who try to stop what's right,\nBurn like my power—Sinestro's might!`
+    },
+    {
+      name: 'Red Lantern Corps',
+      color: 0xff0000,
+      emoji: '🔴',
+      gif: 'red-lantern.gif',
+      message: 'Rage has consumed your heart. The red ring answers only to pure, burning hatred. Bleed for the Corps.',
+      oath: `With blood and rage of crimson red,\nRipped from a corpse so freshly dead,\nTogether with our hellish hate,\nWe'll burn you all—that is your fate!`
+    },
+    {
+      name: 'Blue Lantern Corps',
+      color: 0x00bfff,
+      emoji: '🔵',
+      gif: 'blue-lantern.gif',
+      message: 'In the darkest hour, hope still burns. The blue ring has found a soul capable of inspiring others when all seems lost.',
+      oath: `In fearful day, in raging night,\nWith strong hearts full, our souls ignite.\nWhen all seems lost in the War of Light,\nLook to the stars—for hope burns bright!`
+    },
+    {
+      name: 'Orange Lantern Corps',
+      color: 0xffa500,
+      emoji: '🟠',
+      gif: 'orange-lantern.gif',
+      message: 'Greed is eternal. The orange ring belongs to you now... and only you. Everything else is yours to take.',
+      oath: `What's mine is mine and mine and mine.\nAnd mine and mine and mine!\nNot yours!`
+    },
+    {
+      name: 'Star Sapphire Corps',
+      color: 0xda70d6,
+      emoji: '🟣',
+      gif: 'star-sapphire.gif',
+      message: 'Love is the most powerful force in the universe. The violet light has chosen you to protect those you hold dear... by any means necessary.',
+      oath: `For hearts long lost and full of fright,\nFor those alone in Blackest Night,\nAccept our ring and join our fight.\nLove conquers all—with violet light!`
+    },
+    {
+      name: 'Black Lantern Corps',
+      color: 0x1a1a1a,
+      emoji: '⚫',
+      gif: 'black-lantern.gif',
+      message: 'Death has claimed you. Rise, Black Lantern. The Blackest Night is upon us... and the dead shall feast.',
+      oath: `The Blackest Night falls from the skies,\nThe darkness grows as all light dies.\nWe crave your hearts and your demise,\nBy my black hand—the dead shall rise!`
+    },
+    {
+      name: 'White Lantern Corps',
+      color: 0xffffff,
+      emoji: '⚪',
+      gif: 'white-lantern.gif',
+      message: 'Life itself has answered. The white light of the Entity flows through you. You are the embodiment of existence.',
+      oath: `In brightest day, there will be light.\nTo cleanse the soul and set wrongs right.\nWhen darkness falls, look to the skies.\nA new dawn comes. Let there be light!`
+    },
+    {
+      name: 'Indigo Tribe',
+      color: 0x4b0082,
+      emoji: '💜',
+      gif: 'indigo.gif',
+      message: 'Compassion has found a new vessel. The indigo light forces understanding upon those who once knew only cruelty.',
+      oath: `Tor lorek san, bor nakka mur,\nNatromo faan tornek wot ur.\nTer lantern ker lo Abin Sur,\nTaan lek lek nok—Formorrow Sur!`
+    }
+  ];
+
+  const chosen = corps[Math.floor(Math.random() * corps.length)];
+
+  const embed = new EmbedBuilder()
+    .setColor(chosen.color)
+    .setAuthor({ name: 'LANTERN CORPS RECRUITMENT', iconURL: 'https://i.imgur.com/8Km9tLL.png' })
+    .setTitle(`${chosen.emoji} ${chosen.name}`)
+    .setDescription(`\( {chosen.message}\n\n**Oath of the Corps:**\n\`\`\`\n \){chosen.oath}\n\`\`\``)
+    .setImage(`attachment://${chosen.gif}`)
+    .addFields(
+      { name: 'Recruit', value: interaction.user.username, inline: true },
+      { name: 'Date', value: new Date().toLocaleDateString('en-US'), inline: true }
+    )
+    .setFooter({ text: 'The ring always finds those worthy • Daily Planet Archives' })
+    .setTimestamp();
+
+  try {
+    await interaction.reply({
+      embeds: [embed],
+      files: [chosen.gif]
+    });
+  } catch (error) {
+    console.error('Error sending Lantern GIF:', error);
+    embed.setImage(null);
+    await interaction.reply({ embeds: [embed] });
+  }
+}
 
 client.login(process.env.TOKEN);
