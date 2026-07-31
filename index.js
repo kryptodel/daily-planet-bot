@@ -297,7 +297,9 @@ client.on('interactionCreate', async interaction => {
 
     await interaction.reply({ embeds: [embed] });
   }
-if (commandName === 'supercomputer') {
+
+
+  if (commandName === 'supercomputer') {
   const query = interaction.options.getString('query');
 
   const answers = [
@@ -337,11 +339,16 @@ if (commandName === 'supercomputer') {
   for (const stage of stages) {
     const embed = new EmbedBuilder()
       .setColor(0x00d4ff)
-      .setAuthor({
-        name: 'FORTRESS OF SOLITUDE SUPERCOMPUTER',
-        iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
-      })
-      .setDescription(`\`\`\`${stage.bar}  ${stage.text}\`\`\`\n**Query:** \` ${query}\``);
+      .setTitle('❄️ Fortress of Solitude Supercomputer')
+      .setDescription(
+`\`\`\`
+${stage.bar}
+${stage.text}
+\`\`\`
+
+**Query:**
+\`${query}\``
+      );
 
     await interaction.editReply({ embeds: [embed] });
     await new Promise(r => setTimeout(r, 750));
@@ -349,26 +356,36 @@ if (commandName === 'supercomputer') {
 
   const finalEmbed = new EmbedBuilder()
     .setColor(0x00d4ff)
-    .setAuthor({
-      name: 'FORTRESS OF SOLITUDE SUPERCOMPUTER',
-      iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
-    })
-    .setThumbnail('https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png') // ← Logo pequena no canto
-    .setDescription(`**Query**\n\`\( ${query}\`\n\n**Output**\n ${answer}`)
-    .addFields(
-      { name: 'Access Level', value: '`ALPHA`', inline: true },
-      { name: 'Core Status', value: '`STABLE`', inline: true },
-      { name: 'Operator', value: `\`${interaction.user.username}\``, inline: true }
+    .setTitle('❄️ FORTRESS OF SOLITUDE SUPERCOMPUTER')
+    .setThumbnail('https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png')
+    .setDescription(
+`**Query**
+
+\`${query}\`
+
+**Output**
+
+${answer}`
     )
-    .setImage('attachment://supercomputer.gif') 
-    .setFooter({ text: 'Kryptonian OS • Fortress of Solitude' })
+    .addFields(
+      { name: '🔐 Access Level', value: '`ALPHA`', inline: true },
+      { name: '💎 Core Status', value: '`STABLE`', inline: true },
+      { name: '👤 Operator', value: `\`${interaction.user.username}\``, inline: true },
+      { name: '💻 System', value: '`Kryptonian OS`', inline: true },
+      { name: '🌎 Sector', value: '`2814`', inline: true },
+      { name: '⚡ Latency', value: '`0.03ms`', inline: true }
+    )
+    .setImage('attachment://supercomputer.gif')
+    .setFooter({ 
+      text: 'Fortress of Solitude • Access Authorized' 
+    })
     .setTimestamp();
 
   await interaction.editReply({
     embeds: [finalEmbed],
     files: ['supercomputer.gif']
   });
-}
+  }
         if (commandName === 'lantern') {
   const corps = [
     {
