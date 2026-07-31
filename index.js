@@ -12,7 +12,17 @@ app.listen(PORT, () => {
 });
 
 require('dotenv').config();
-const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const {
+  Client,
+  GatewayIntentBits,
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  AttachmentBuilder
+} = require('discord.js');
+
+const { createCanvas, loadImage } = require('canvas');
 
 const client = new Client({
   intents: [
