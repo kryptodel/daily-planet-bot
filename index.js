@@ -479,6 +479,11 @@ ${chosen.oath}
       text: 'The ring always finds those worthy • Daily Planet Archives'
     })
     .setTimestamp();
+          await interaction.reply({
+    embeds:[embed],
+    files:[chosen.gif]
+});
+        }
 
   
 if (commandName === 'wanted') {
