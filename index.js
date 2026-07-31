@@ -321,94 +321,61 @@ if (commandName === 'supercomputer') {
     'Future projection calculated. The path you are considering is the most stable.',
     'Alert: this decision may significantly alter the flow of events in Metropolis.',
     'Query processed. The universe tends toward balance. Your action will be part of it.',
-    'Answer calculated with 99.97% accuracy: the truth lies in the details you have not yet observed.',
+    'Answer calculated with 99.97% accuracy: the truth lies in the details you have not yet observed.'
   ];
 
   const answer = answers[Math.floor(Math.random() * answers.length)];
 
-  const loadingStages = [
-    { percent: 22, bar: '▰▰▱▱▱▱▱▱▱▱', status: '▸ Initializing crystal matrix...' },
-    { percent: 48, bar: '▰▰▰▰▱▱▱▱▱▱', status: '▸ Accessing Kryptonian archives...' },
-    { percent: 71, bar: '▰▰▰▰▰▰▰▱▱▱', status: '▸ Running quantum simulations...' },
-    { percent: 94, bar: '▰▰▰▰▰▰▰▰▰▱', status: '▸ Finalizing analysis...' }
+  const stages = [
+    { bar: '▰▱▱▱▱▱▱▱', text: 'Initializing matrix...' },
+    { bar: '▰▰▰▱▱▱▱▱', text: 'Accessing archives...' },
+    { bar: '▰▰▰▰▰▱▱▱', text: 'Running simulations...' },
+    { bar: '▰▰▰▰▰▰▰▱', text: 'Finalizing...' }
   ];
 
   await interaction.deferReply();
 
-  for (const stage of loadingStages) {
-    const loadingEmbed = new EmbedBuilder()
-      .setColor(0x00e5ff)
+  for (const stage of stages) {
+    const embed = new EmbedBuilder()
+      .setColor(0x00d4ff)
       .setAuthor({
-        name: 'FORTRESS OF SOLITUDE  •  SUPERCOMPUTER',
+        name: 'FORTRESS OF SOLITUDE SUPERCOMPUTER',
         iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
       })
-      .setTitle('❄️  QUERY IN PROGRESS')
       .setDescription(
 `\`\`\`
-KRYPTONIAN OS  •  v12.7.3
-SECTOR 2814   •  ACCESS: ALPHA
+${stage.bar}  ${stage.text}
 \`\`\`
+**Query:** \`${query}\``
+      );
 
-**Query**
-\`\`\`${query}\`\`\`
-
-**Status**
-${stage.status}
-
-\`\`\`
-${stage.bar}  ${stage.percent}%
-\`\`\`
-`
-      )
-      .setFooter({ text: 'Crystal Core  •  -273.1°C  •  Online' })
-      .setTimestamp();
-
-    await interaction.editReply({ embeds: [loadingEmbed] });
-    await new Promise(resolve => setTimeout(resolve, 850));
+    await interaction.editReply({ embeds: [embed] });
+    await new Promise(r => setTimeout(r, 800));
   }
 
   const finalEmbed = new EmbedBuilder()
-    .setColor(0x00e5ff)
+    .setColor(0x00d4ff)
     .setAuthor({
-      name: 'FORTRESS OF SOLITUDE  •  SUPERCOMPUTER',
+      name: 'FORTRESS OF SOLITUDE SUPERCOMPUTER',
       iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
     })
-    .setTitle('❄️  ANALYSIS COMPLETE')
     .setDescription(
 `\`\`\`
-RESULT TRANSMITTED
-Integrity 100%  •  Latency 0.03ms
+ANALYSIS COMPLETE
 \`\`\`
-
 **Query**
-\`\`\`${query}\`\`\`
+\`${query}\`
 
-**Supercomputer Output**
->>> **${answer}**
-`
+**Output**
+${answer}`
     )
     .setImage('attachment://supercomputer.gif')
     .addFields(
-      {
-        name: '🔐 Access Level',
-        value: '```ALPHA```',
-        inline: true
-      },
-      {
-        name: '🧊 Core Status',
-        value: '```STABLE```',
-        inline: true
-      },
-      {
-        name: '👤 Operator',
-        value: `\`\`\`${interaction.user.username}\`\`\``,
-        inline: true
-      }
+      { name: 'Access', value: '`ALPHA`', inline: true },
+      { name: 'Status', value: '`STABLE`', inline: true },
+      { name: 'Operator', value: `\`${interaction.user.username}\``, inline: true }
     )
-    .setFooter({
-      text: 'Kryptonian Operating System  •  Fortress of Solitude  •  Access Authorized'
-    })
-    .setTimestamp();
+    .setFooter({ text: 'Kryptonian OS • Fortress of Solitude' });
 
   await interaction.editReply({
     embeds: [finalEmbed],
