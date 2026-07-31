@@ -433,6 +433,7 @@ if (commandName === 'supercomputer') {
     embeds: [finalEmbed],
     files: ['supercomputer.gif'] 
   });
+}
 
         if (commandName === 'lantern') {
   const corps = [
