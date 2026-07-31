@@ -102,7 +102,7 @@ client.on('interactionCreate', async interaction => {
 
     const embed = new EmbedBuilder()
       .setColor(0x1a1a2e)
-      .setAuthor({ name: 'DAILY PLANET', iconURL: 'https://i.imgur.com/8Km9tLL.png' })
+      .setAuthor({ name: 'DAILY PLANET', iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png?ex=6a6d4578&is=6a6bf3f8&hm=82b8964e447e4fdb44587aebb223b80c9380d32473c0bb56321258fa9b033f07&' })
       .setTitle(`📰 ${title.toUpperCase()}`)
       .setDescription(content)
       .addFields(
@@ -176,7 +176,7 @@ client.on('interactionCreate', async interaction => {
 
     const embed = new EmbedBuilder()
       .setColor(0x1a1a2e)
-      .setAuthor({ name: 'DAILY PLANET — Today\'s Edition', iconURL: 'https://i.imgur.com/8Km9tLL.png' })
+      .setAuthor({ name: 'DAILY PLANET — Today\'s Edition', iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png?ex=6a6d4578&is=6a6bf3f8&hm=82b8964e447e4fdb44587aebb223b80c9380d32473c0bb56321258fa9b033f07&' })
       .setTitle(`🗞️ ${title}`)
       .setDescription(content)
       .addFields(
@@ -422,7 +422,7 @@ Taan lek lek nok—Formorrow Sur!`
     .setColor(chosen.color)
     .setAuthor({
       name: 'LANTERN CORPS RECRUITMENT',
-      iconURL: 'https://i.imgur.com/8Km9tLL.png'
+      iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png?ex=6a6d4578&is=6a6bf3f8&hm=82b8964e447e4fdb44587aebb223b80c9380d32473c0bb56321258fa9b033f07&'
     })
     .setTitle(`${chosen.emoji} ${chosen.name}`)
     .setDescription(
