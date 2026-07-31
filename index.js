@@ -81,12 +81,12 @@ client.once('ready', async () => {
   )
   .addStringOption(opt => 
     opt.setName('reward')
-      .setDescription('Reward amount (example: $10.000.000)')
+      .setDescription('Reward amount (example: $10,000)')
       .setRequired(true)
   )
   .addStringOption(opt => 
     opt.setName('crime')
-      .setDescription('Crimes (example: Vigilantism, Assault, Breaking and entering)')
+      .setDescription('Crime committed')
       .setRequired(true)
   ),
 
@@ -491,33 +491,83 @@ ${chosen.oath}
   const reward = interaction.options.getString('reward');
   const crime = interaction.options.getString('crime');
 
-  const embed = new EmbedBuilder()
-    .setColor(0x8B0000)
-    .setAuthor({ 
-      name: 'METROPOLIS POLICE DEPARTMENT', 
-      iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png?ex=6a6d4578&is=6a6bf3f8&hm=82b8964e447e4fdb44587aebb223b80c9380d32473c0bb56321258fa9b033f07' 
-    })
-    .setTitle('🚨 WANTED 🚨')
-    .setDescription(
-`**Name:** ${target.username}
+  await interaction.deferReply();
 
-**Reward:**
-\`\`\`
-${reward}
-\`\`\`
+  try {
+    const canvas = createCanvas(650, 920);
+    const ctx = canvas.getContext('2d');
 
-**Crime:**
-\`\`\`
-${crime}
-\`\`\`
-`
-    )
-    .setThumbnail(target.displayAvatarURL({ dynamic: true, size: 512 }))
-    .setImage(target.displayAvatarURL({ dynamic: true, size: 512 }))
-    .setFooter({ text: 'MPD • Daily Planet • Dead or Alive' })
-    .setTimestamp();
+    ctx.fillStyle = '#e6d3b1';
+    ctx.fillRect(0, 0, 650, 920);
 
-  await interaction.reply({ embeds: [embed] });
+    ctx.fillStyle = '#d4c19a';
+    for (let i = 0; i < 180; i++) {
+      ctx.globalAlpha = 0.15;
+      ctx.fillRect(Math.random() * 650, Math.random() * 920, 3, 3);
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.strokeStyle = '#3e2b1f';
+    ctx.lineWidth = 14;
+    ctx.strokeRect(12, 12, 626, 896);
+
+    ctx.strokeStyle = '#5c4033';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(28, 28, 594, 864);
+
+    ctx.fillStyle = '#1a120b';
+    ctx.font = 'bold 82px Arial Black, Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('WANTED', 325, 110);
+
+    ctx.strokeStyle = '#1a120b';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(90, 130);
+    ctx.lineTo(560, 130);
+    ctx.stroke();
+
+    ctx.font = 'bold 26px Arial';
+    ctx.fillText('DEAD OR ALIVE', 325, 165);
+
+    const avatar = await loadImage(target.displayAvatarURL({ extension: 'png', size: 512 }));
+
+    ctx.fillStyle = '#f5f0e6';
+    ctx.fillRect(125, 190, 400, 400);
+    ctx.strokeStyle = '#1a120b';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(125, 190, 400, 400);
+
+    ctx.drawImage(avatar, 135, 200, 380, 380);
+
+    ctx.fillStyle = '#1a120b';
+    ctx.font = 'bold 38px Arial';
+    ctx.fillText(target.username.toUpperCase(), 325, 640);
+
+    ctx.font = '22px Arial';
+    ctx.fillStyle = '#3e2b1f';
+    ctx.fillText(`Crime: ${crime}`, 325, 680);
+
+    ctx.fillStyle = '#8B0000';
+    ctx.font = 'bold 36px Arial Black, Arial';
+    ctx.fillText('★  REWARD  ★', 325, 750);
+
+    ctx.fillStyle = '#1a120b';
+    ctx.font = 'bold 52px Arial Black, Arial';
+    ctx.fillText(reward, 325, 815);
+
+    ctx.font = '18px Arial';
+    ctx.fillStyle = '#5c4033';
+    ctx.fillText('METROPOLIS POLICE DEPARTMENT  •  DAILY PLANET', 325, 880);
+
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'wanted.png' });
+
+    await interaction.editReply({ files: [attachment] });
+
+  } catch (error) {
+    console.error(error);
+    await interaction.editReply({ content: 'Failed to generate the Wanted poster.' });
+  }
   }
 });
 
