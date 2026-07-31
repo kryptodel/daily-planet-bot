@@ -342,7 +342,7 @@ Burn like my power—Sinestro's might!`
       name: 'Red Lantern Corps',
       color: 0xff0000,
       emoji: '🔴',
-      gif: 'red-lantern.gif',
+      gif: 'dc-injustice.gif',
       message: 'Rage has consumed your heart. The red ring answers only to pure, burning hatred. Bleed for the Corps.',
       oath: `With blood and rage of crimson red,
 Ripped from a corpse so freshly dead,
@@ -385,7 +385,7 @@ Love conquers all—with violet light!`
       name: 'Black Lantern Corps',
       color: 0x1a1a1a,
       emoji: '⚫',
-      gif: 'black-lantern.gif',
+      gif: 'black-lantern-corps-green-lantern.gif',
       message: 'Death has claimed you. Rise, Black Lantern. The Blackest Night is upon us... and the dead shall feast.',
       oath: `The Blackest Night falls from the skies,
 The darkness grows as all light dies.
@@ -407,7 +407,7 @@ A new dawn comes. Let there be light!`
       name: 'Indigo Tribe',
       color: 0x4b0082,
       emoji: '💜',
-      gif: 'indigo.gif',
+      gif: 'dc-comics-compassion.gif',
       message: 'Compassion has found a new vessel. The indigo light forces understanding upon those who once knew only cruelty.',
       oath: `Tor lorek san, bor nakka mur,
 Natromo faan tornek wot ur.
