@@ -314,7 +314,7 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [embed] });
   }
 
-        .if (commandName === 'lantern') {
+        if (commandName === 'lantern') {
   const corps = [
     {
       name: 'Green Lantern Corps',
