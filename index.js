@@ -72,6 +72,25 @@ client.once('ready', async () => {
       .addStringOption(opt => opt.setName('question').setDescription('Your question').setRequired(true)),
 
     new SlashCommandBuilder()
+  .setName('wanted')
+  .setDescription('Create a Wanted poster')
+  .addUserOption(opt => 
+    opt.setName('user')
+      .setDescription('The person to put on the poster')
+      .setRequired(true)
+  )
+  .addStringOption(opt => 
+    opt.setName('reward')
+      .setDescription('Reward amount (example: $10.000.000)')
+      .setRequired(true)
+  )
+  .addStringOption(opt => 
+    opt.setName('crime')
+      .setDescription('Crimes (example: Vigilantism, Assault, Breaking and entering)')
+      .setRequired(true)
+  ),
+
+    new SlashCommandBuilder()
       .setName('supercomputer')
       .setDescription('Consult the Fortress of Solitude supercomputer')
       .addStringOption(opt => opt.setName('query').setDescription('What do you want to consult?').setRequired(true)),
@@ -466,6 +485,40 @@ ${chosen.oath}
     });
   }
 }
+
+  if (commandName === 'wanted') {
+  const target = interaction.options.getUser('user');
+  const reward = interaction.options.getString('reward');
+  const crime = interaction.options.getString('crime');
+
+  const embed = new EmbedBuilder()
+    .setColor(0x8B0000)
+    .setAuthor({ 
+      name: 'METROPOLIS POLICE DEPARTMENT', 
+      iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png?ex=6a6d4578&is=6a6bf3f8&hm=82b8964e447e4fdb44587aebb223b80c9380d32473c0bb56321258fa9b033f07' 
+    })
+    .setTitle('🚨 WANTED 🚨')
+    .setDescription(
+`**Name:** ${target.username}
+
+**Reward:**
+\`\`\`
+${reward}
+\`\`\`
+
+**Crime:**
+\`\`\`
+${crime}
+\`\`\`
+`
+    )
+    .setThumbnail(target.displayAvatarURL({ dynamic: true, size: 512 }))
+    .setImage(target.displayAvatarURL({ dynamic: true, size: 512 }))
+    .setFooter({ text: 'MPD • Daily Planet • Dead or Alive' })
+    .setTimestamp();
+
+  await interaction.reply({ embeds: [embed] });
+  }
 });
 
 client.on('interactionCreate', async interaction => {
