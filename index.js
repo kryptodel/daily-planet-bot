@@ -433,8 +433,6 @@ if (commandName === 'supercomputer') {
     embeds: [finalEmbed],
     files: ['supercomputer.gif'] 
   });
-}interaction.reply({ embeds: [embed] });
-  }
 
         if (commandName === 'lantern') {
   const corps = [
