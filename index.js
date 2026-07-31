@@ -298,8 +298,7 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [embed] });
   }
 
-
-      if (commandName === 'supercomputer') {
+if (commandName === 'supercomputer') {
   const query = interaction.options.getString('query');
 
   const answers = [
@@ -367,7 +366,7 @@ ${stage.bar}  ${stage.percent}%
     await interaction.editReply({ embeds: [loadingEmbed] });
     await new Promise(resolve => setTimeout(resolve, 850));
   }
-)
+
   const finalEmbed = new EmbedBuilder()
     .setColor(0x00e5ff)
     .setAuthor({
@@ -391,7 +390,7 @@ Integrity 100%  •  Latency 0.03ms
     .setImage('attachment://supercomputer.gif')
     .addFields(
       {
-        name: ' conselho Access Level',
+        name: '🔐 Access Level',
         value: '```ALPHA```',
         inline: true
       },
@@ -415,7 +414,7 @@ Integrity 100%  •  Latency 0.03ms
     embeds: [finalEmbed],
     files: ['supercomputer.gif']
   });
-    }
+}
         if (commandName === 'lantern') {
   const corps = [
     {
