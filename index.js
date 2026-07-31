@@ -298,31 +298,6 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [embed] });
   }
 
-if (commandName === 'supercomputer') {
-  const query = interaction.options.getString('query');
-
-  const answers = [
-    'Analysis complete. Success probability: 87.4%. Proceed with caution.',
-    'Insufficient data for a definitive conclusion. Requesting additional information.',
-    'The probability of this hypothesis being true is only 12.8%.',
-    'Calculation finished. The result is favorable to your intentions.',
-    'Warning: this line of reasoning may lead to unpredictable consequences.',
-    'Processing... Result: the answer you seek is closer than you imagine.',
-    'Pattern analysis complete. Recommend prolonged observation before acting.',
-    'This question has been formulated 47 times in this system\'s history. The answer remains the same: yes.',
-    'Negative. Available data contradicts this possibility.',
-    'Affirmative. All sensors indicate this is the correct decision.',
-    'Risk calculation: moderate. Potential benefit: high. Proceed carefully.',
-    'The supercomputer detects no immediate threats related to this query.',
-    'Simulation result: 9 out of 10 scenarios end satisfactorily.',
-    'Access denied to part of the files. Information classified at Kryptonian level.',
-    'Emotional analysis detected in the query. Filtering... Logical answer: it is possible.',
-    'The Fortress crystals vibrate at a positive frequency. Interpretation: yes.',
-    'Future projection calculated. The path you are considering is the most stable.',
-    'Alert: this decision may significantly alter the flow of events in Metropolis.',
-    'Query processed. The universe tends toward balance. Your action will be part of it.',
-    'Answer calculated with 99.97% accuracy: the truth lies in the details you have not yet observed.',
-  ];
 
       if (commandName === 'supercomputer') {
   const query = interaction.options.getString('query');
