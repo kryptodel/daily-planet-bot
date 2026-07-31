@@ -504,87 +504,208 @@ ${chosen.oath}
   await interaction.deferReply();
 
   try {
-    const canvas = createCanvas(650, 920);
+    const canvas = createCanvas(900, 1300);
     const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = '#e6d3b1';
-    ctx.fillRect(0, 0, 650, 920);
+    const gradient = ctx.createLinearGradient(0, 0, 0, 1300);
+    gradient.addColorStop(0, '#f5e4b3');
+    gradient.addColorStop(0.5, '#e2c98d');
+    gradient.addColorStop(1, '#c6a96d');
 
-    ctx.fillStyle = '#d4c19a';
-    for (let i = 0; i < 180; i++) {
-      ctx.globalAlpha = 0.15;
-      ctx.fillRect(Math.random() * 650, Math.random() * 920, 3, 3);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < 12000; i++) {
+      ctx.globalAlpha = Math.random() * 0.08;
+
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const s = Math.random() * 3;
+
+      ctx.fillStyle = Math.random() > 0.5 ? "#8d6e3b" : "#ffffff";
+      ctx.fillRect(x, y, s, s);
     }
+
     ctx.globalAlpha = 1;
 
-    ctx.strokeStyle = '#3e2b1f';
-    ctx.lineWidth = 14;
-    ctx.strokeRect(12, 12, 626, 896);
+    ctx.lineWidth = 20;
+    ctx.strokeStyle = "#3b2814";
+    ctx.strokeRect(15, 15, 870, 1270);
 
-    ctx.strokeStyle = '#5c4033';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(28, 28, 594, 864);
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = "#5b3b1f";
+    ctx.strokeRect(40, 40, 820, 1220);
 
-    ctx.fillStyle = '#1a120b';
-    ctx.font = 'bold 82px Arial Black, Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('WANTED', 325, 110);
+    ctx.fillStyle = "#3b2814";
 
-    ctx.strokeStyle = '#1a120b';
-    ctx.lineWidth = 3;
+    ctx.fillRect(15,15,40,40);
+    ctx.fillRect(845,15,40,40);
+    ctx.fillRect(15,1245,40,40);
+    ctx.fillRect(845,1245,40,40);
+
+
+    ctx.textAlign = "center";
+
+    ctx.shadowColor = "black";
+    ctx.shadowBlur = 15;
+
+    ctx.fillStyle = "#2b1806";
+    ctx.font = "bold 105px Georgia";
+
+    ctx.fillText("★ WANTED ★",450,130);
+
+    ctx.shadowBlur = 0;
+
+    ctx.font="bold 38px Georgia";
+    ctx.fillText("DEAD OR ALIVE",450,190);
+
+
     ctx.beginPath();
-    ctx.moveTo(90, 130);
-    ctx.lineTo(560, 130);
+    ctx.moveTo(150,215);
+    ctx.lineTo(750,215);
+    ctx.lineWidth=4;
+    ctx.strokeStyle="#2b1806";
     ctx.stroke();
 
-    ctx.font = 'bold 26px Arial';
-    ctx.fillText('DEAD OR ALIVE', 325, 165);
 
-    const avatar = await loadImage(target.displayAvatarURL({ extension: 'png', size: 512 }));
+    ctx.fillStyle="#5a3d20";
+    ctx.fillRect(180,260,540,540);
 
-    ctx.fillStyle = '#f5f0e6';
-    ctx.fillRect(125, 190, 400, 400);
-    ctx.strokeStyle = '#1a120b';
-    ctx.lineWidth = 8;
-    ctx.strokeRect(125, 190, 400, 400);
+    ctx.fillStyle="#8b6b3c";
+    ctx.fillRect(195,275,510,510);
 
-    ctx.drawImage(avatar, 135, 200, 380, 380);
+    ctx.fillStyle="#f8f3e5";
+    ctx.fillRect(215,295,470,470);
 
-    ctx.fillStyle = '#1a120b';
-    ctx.font = 'bold 38px Arial';
-    ctx.fillText(target.username.toUpperCase(), 325, 640);
+    const avatar = await loadImage(
+      target.displayAvatarURL({
+        extension:"png",
+        size:512
+      })
+    );
 
-    ctx.font = '22px Arial';
-    ctx.fillStyle = '#3e2b1f';
-    ctx.fillText(`Crime: ${crime}`, 325, 680);
+    ctx.drawImage(avatar,225,305,450,450);
 
-    ctx.fillStyle = '#8B0000';
-    ctx.font = 'bold 36px Arial Black, Arial';
-    ctx.fillText('★  REWARD  ★', 325, 750);
 
-    ctx.fillStyle = '#1a120b';
-    ctx.font = 'bold 52px Arial Black, Arial';
-    ctx.fillText(reward, 325, 815);
+    ctx.fillStyle="#d6b15c";
 
-    ctx.font = '18px Arial';
-    ctx.fillStyle = '#5c4033';
-    ctx.fillText('METROPOLIS POLICE DEPARTMENT  •  DAILY PLANET', 325, 880);
+    [[205,285],[695,285],[205,785],[695,785]].forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p[0],p[1],8,0,Math.PI*2);
+        ctx.fill();
+    });
 
-    const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'wanted.png' });
 
-    await interaction.editReply({ files: [attachment] });
+    ctx.fillStyle="#241509";
+    ctx.font="bold 52px Georgia";
+    ctx.fillText(target.username.toUpperCase(),450,875);
 
-  } catch (error) {
-    console.error(error);
-    await interaction.editReply({ content: 'Failed to generate the Wanted poster.' });
-  }
-  }
+
+    ctx.font="bold 32px Georgia";
+    ctx.fillText("WANTED FOR",450,935);
+
+    ctx.font="28px Georgia";
+    const crimes = crime.match(/.{1,38}(\s|$)/g) || [crime];
+
+let y = 980;
+
+ctx.font = "28px Georgia";
+ctx.fillStyle = "#3d2815";
+
+for (const line of crimes.slice(0, 5)) {
+  ctx.fillText(line.trim(), 450, y);
+  y += 40;
+}
+
+
+ctx.fillStyle = "#6b0000";
+ctx.fillRect(170, y + 30, 560, 150);
+
+ctx.strokeStyle = "#2a0000";
+ctx.lineWidth = 6;
+ctx.strokeRect(170, y + 30, 560, 150);
+
+ctx.fillStyle = "#ffe8a3";
+ctx.font = "bold 42px Georgia";
+ctx.fillText("REWARD", 450, y + 85);
+
+ctx.fillStyle = "#ffffff";
+ctx.font = "bold 64px Georgia";
+ctx.fillText(reward, 450, y + 145);
+"
+
+ctx.beginPath();
+ctx.arc(760, 360, 90, 0, Math.PI * 2);
+
+ctx.fillStyle = "#9b0000";
+ctx.fill();
+
+ctx.lineWidth = 6;
+ctx.strokeStyle = "#f4d37a";
+ctx.stroke();
+
+ctx.save();
+ctx.translate(760,360);
+ctx.rotate(-0.35);
+
+ctx.fillStyle = "#ffffff";
+ctx.font = "bold 24px Arial";
+ctx.fillText("MOST",0,-8);
+ctx.fillText("WANTED",0,25);
+
+ctx.restore();
+
+
+ctx.beginPath();
+ctx.moveTo(120,1180);
+ctx.lineTo(780,1180);
+ctx.strokeStyle="#3b2814";
+ctx.lineWidth=3;
+ctx.stroke();
+
+ctx.fillStyle="#2b1806";
+
+ctx.font="bold 24px Georgia";
+ctx.fillText("METROPOLIS POLICE DEPARTMENT",450,1225);
+
+ctx.font="20px Georgia";
+ctx.fillText("Issued by the Daily Planet Archives",450,1260);
+
+
+const vignette = ctx.createRadialGradient(
+    450,
+    650,
+    400,
+    450,
+    650,
+    800
+);
+
+vignette.addColorStop(0,"rgba(0,0,0,0)");
+vignette.addColorStop(1,"rgba(0,0,0,0.35)");
+
+ctx.fillStyle = vignette;
+ctx.fillRect(0,0,900,1300);
+
+
+const attachment = new AttachmentBuilder(
+    canvas.toBuffer("image/png"),
+    {
+        name:"wanted.png"
+    }
+);
+
+await interaction.editReply({
+    files:[attachment]
 });
 
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isButton()) return;
-  if (interaction.customId === 'congratulate') {
-    await interaction.reply({ content: `🎉 ${interaction.user} congratulated the couple!`, ephemeral: false });
+} catch(error){
+    console.error(error);
+
+    await interaction.editReply({
+        content:"❌ Failed to generate the Wanted poster."
+    });
+}
   }
 });
 
