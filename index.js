@@ -299,7 +299,7 @@ client.on('interactionCreate', async interaction => {
   }
 
 
-  if (commandName === 'supercomputer') {
+if (commandName === 'supercomputer') {
   const query = interaction.options.getString('query');
 
   const answers = [
@@ -339,15 +339,12 @@ client.on('interactionCreate', async interaction => {
   for (const stage of stages) {
     const embed = new EmbedBuilder()
       .setColor(0x00d4ff)
-      .setTitle('❄️ Fortress of Solitude Supercomputer')
       .setDescription(
 `\`\`\`
-${stage.bar}
-${stage.text}
+${stage.bar}  ${stage.text}
 \`\`\`
 
-**Query:**
-\`${query}\``
+**Query:** \`${query}\``
       );
 
     await interaction.editReply({ embeds: [embed] });
@@ -356,7 +353,7 @@ ${stage.text}
 
   const finalEmbed = new EmbedBuilder()
     .setColor(0x00d4ff)
-    .setTitle('❄️ FORTRESS OF SOLITUDE SUPERCOMPUTER')
+    .setTitle('SUPERCOMPUTER')
     .setThumbnail('https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png')
     .setDescription(
 `**Query**
@@ -368,24 +365,26 @@ ${stage.text}
 ${answer}`
     )
     .addFields(
-      { name: '🔐 Access Level', value: '`ALPHA`', inline: true },
-      { name: '💎 Core Status', value: '`STABLE`', inline: true },
-      { name: '👤 Operator', value: `\`${interaction.user.username}\``, inline: true },
-      { name: '💻 System', value: '`Kryptonian OS`', inline: true },
-      { name: '🌎 Sector', value: '`2814`', inline: true },
-      { name: '⚡ Latency', value: '`0.03ms`', inline: true }
+      {
+        name: 'System',
+        value: `Access: \`ALPHA\`\nStatus: \`STABLE\`\nOperator: \`${interaction.user.username}\``,
+        inline: true
+      },
+      {
+        name: 'Details',
+        value: `OS: \`Kryptonian\`\nSector: \`2814\`\nLatency: \`0.03ms\``,
+        inline: true
+      }
     )
     .setImage('attachment://supercomputer.gif')
-    .setFooter({ 
-      text: 'Fortress of Solitude • Access Authorized' 
-    })
+    .setFooter({ text: 'Fortress of Solitude • Access Authorized' })
     .setTimestamp();
 
   await interaction.editReply({
     embeds: [finalEmbed],
     files: ['supercomputer.gif']
   });
-  }
+}
         if (commandName === 'lantern') {
   const corps = [
     {
