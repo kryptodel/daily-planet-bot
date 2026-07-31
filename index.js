@@ -324,117 +324,123 @@ if (commandName === 'supercomputer') {
     'Answer calculated with 99.97% accuracy: the truth lies in the details you have not yet observed.',
   ];
 
+      if (commandName === 'supercomputer') {
+  const query = interaction.options.getString('query');
+
+  const answers = [
+    'Analysis complete. Success probability: 87.4%. Proceed with caution.',
+    'Insufficient data for a definitive conclusion. Requesting additional information.',
+    'The probability of this hypothesis being true is only 12.8%.',
+    'Calculation finished. The result is favorable to your intentions.',
+    'Warning: this line of reasoning may lead to unpredictable consequences.',
+    'Processing... Result: the answer you seek is closer than you imagine.',
+    'Pattern analysis complete. Recommend prolonged observation before acting.',
+    'This question has been formulated 47 times in this system\'s history. The answer remains the same: yes.',
+    'Negative. Available data contradicts this possibility.',
+    'Affirmative. All sensors indicate this is the correct decision.',
+    'Risk calculation: moderate. Potential benefit: high. Proceed carefully.',
+    'The supercomputer detects no immediate threats related to this query.',
+    'Simulation result: 9 out of 10 scenarios end satisfactorily.',
+    'Access denied to part of the files. Information classified at Kryptonian level.',
+    'Emotional analysis detected in the query. Filtering... Logical answer: it is possible.',
+    'The Fortress crystals vibrate at a positive frequency. Interpretation: yes.',
+    'Future projection calculated. The path you are considering is the most stable.',
+    'Alert: this decision may significantly alter the flow of events in Metropolis.',
+    'Query processed. The universe tends toward balance. Your action will be part of it.',
+    'Answer calculated with 99.97% accuracy: the truth lies in the details you have not yet observed.',
+  ];
+
   const answer = answers[Math.floor(Math.random() * answers.length)];
 
   const loadingStages = [
-    {
-      percent: 18,
-      bar: '█░░░░░░░░░',
-      status: 'Initializing crystal matrix...'
-    },
-    {
-      percent: 41,
-      bar: '████░░░░░░',
-      status: 'Accessing Kryptonian archives...'
-    },
-    {
-      percent: 67,
-      bar: '███████░░░',
-      status: 'Running quantum simulations...'
-    },
-    {
-      percent: 93,
-      bar: '█████████░',
-      status: 'Finalizing analysis...'
-    }
+    { percent: 22, bar: '▰▰▱▱▱▱▱▱▱▱', status: '▸ Initializing crystal matrix...' },
+    { percent: 48, bar: '▰▰▰▰▱▱▱▱▱▱', status: '▸ Accessing Kryptonian archives...' },
+    { percent: 71, bar: '▰▰▰▰▰▰▰▱▱▱', status: '▸ Running quantum simulations...' },
+    { percent: 94, bar: '▰▰▰▰▰▰▰▰▰▱', status: '▸ Finalizing analysis...' }
   ];
 
   await interaction.deferReply();
 
   for (const stage of loadingStages) {
     const loadingEmbed = new EmbedBuilder()
-      .setColor(0x00d4ff)
+      .setColor(0x00e5ff)
       .setAuthor({
-        name: 'FORTRESS OF SOLITUDE • SUPERCOMPUTER',
-        iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png?ex=6a6d4578&is=6a6bf3f8&hm=82b8964e447e4fdb44587aebb223b80c9380d32473c0'
+        name: 'FORTRESS OF SOLITUDE  •  SUPERCOMPUTER',
+        iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
       })
-      .setTitle('❄️ QUERY IN PROGRESS')
+      .setTitle('❄️  QUERY IN PROGRESS')
       .setDescription(
-`\`\`\`ansi
-[2;36m╔══════════════════════════════════════╗
-║  KRYPTONIAN OS v12.7.3               ║
-║  Sector: 2814 • Access Level: ALPHA  ║
-╚══════════════════════════════════════╝[0m
+`\`\`\`
+KRYPTONIAN OS  •  v12.7.3
+SECTOR 2814   •  ACCESS: ALPHA
 \`\`\`
 
-**Query received:**
+**Query**
 \`\`\`${query}\`\`\`
 
-**Status:** ${stage.status}
+**Status**
+${stage.status}
 
 \`\`\`
-[${stage.bar}] ${stage.percent}%
+${stage.bar}  ${stage.percent}%
 \`\`\`
 `
       )
-      .setFooter({ text: 'Crystal Core • Temperature: -273.1°C • Online' })
+      .setFooter({ text: 'Crystal Core  •  -273.1°C  •  Online' })
       .setTimestamp();
 
     await interaction.editReply({ embeds: [loadingEmbed] });
-    await new Promise(resolve => setTimeout(resolve, 900));
+    await new Promise(resolve => setTimeout(resolve, 850));
   }
-
+)
   const finalEmbed = new EmbedBuilder()
-    .setColor(0x00eaff)
+    .setColor(0x00e5ff)
     .setAuthor({
-      name: 'FORTRESS OF SOLITUDE • SUPERCOMPUTER',
-      iconURL: 'https://i.imgur.com/3X5QZ8L.png'
+      name: 'FORTRESS OF SOLITUDE  •  SUPERCOMPUTER',
+      iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
     })
-    .setTitle('❄️ ANALYSIS COMPLETE')
+    .setTitle('❄️  ANALYSIS COMPLETE')
     .setDescription(
-`\`\`\`ansi
-[2;36m╔══════════════════════════════════════╗
-║  RESULT TRANSMITTED                  ║
-║  Integrity: 100% • Latency: 0.03ms   ║
-╚══════════════════════════════════════╝[0m
+`\`\`\`
+RESULT TRANSMITTED
+Integrity 100%  •  Latency 0.03ms
 \`\`\`
 
-**Query:**
+**Query**
 \`\`\`${query}\`\`\`
 
-**Supercomputer Output:**
-> **${answer}**
+**Supercomputer Output**
+>>> **${answer}**
 `
     )
     .setImage('attachment://supercomputer.gif')
     .addFields(
       {
-        name: 'Access Level',
+        name: ' conselho Access Level',
         value: '```ALPHA```',
         inline: true
       },
       {
-        name: 'Core Status',
+        name: '🧊 Core Status',
         value: '```STABLE```',
         inline: true
       },
       {
-        name: 'Operator',
+        name: '👤 Operator',
         value: `\`\`\`${interaction.user.username}\`\`\``,
         inline: true
       }
     )
     .setFooter({
-      text: 'Kryptonian Operating System • Fortress of Solitude • Access Authorized'
+      text: 'Kryptonian Operating System  •  Fortress of Solitude  •  Access Authorized'
     })
     .setTimestamp();
 
   await interaction.editReply({
     embeds: [finalEmbed],
-    files: ['supercomputer.gif'] 
+    files: ['supercomputer.gif']
   });
-}
-
+    }
         if (commandName === 'lantern') {
   const corps = [
     {
