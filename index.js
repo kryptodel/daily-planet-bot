@@ -297,7 +297,6 @@ client.on('interactionCreate', async interaction => {
 
     await interaction.reply({ embeds: [embed] });
   }
-
 if (commandName === 'supercomputer') {
   const query = interaction.options.getString('query');
 
@@ -342,15 +341,10 @@ if (commandName === 'supercomputer') {
         name: 'FORTRESS OF SOLITUDE SUPERCOMPUTER',
         iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
       })
-      .setDescription(
-`\`\`\`
-${stage.bar}  ${stage.text}
-\`\`\`
-**Query:** \`${query}\``
-      );
+      .setDescription(`\`\`\`${stage.bar}  \( {stage.text}\`\`\`\n**Query:** \` \){query}\``);
 
     await interaction.editReply({ embeds: [embed] });
-    await new Promise(r => setTimeout(r, 800));
+    await new Promise(r => setTimeout(r, 750));
   }
 
   const finalEmbed = new EmbedBuilder()
@@ -359,23 +353,16 @@ ${stage.bar}  ${stage.text}
       name: 'FORTRESS OF SOLITUDE SUPERCOMPUTER',
       iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
     })
-    .setDescription(
-`\`\`\`
-ANALYSIS COMPLETE
-\`\`\`
-**Query**
-\`${query}\`
-
-**Output**
-${answer}`
-    )
-    .setImage('attachment://supercomputer.gif')
+    .setThumbnail('https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png') // ← Logo pequena no canto
+    .setDescription(`**Query**\n\`\( {query}\`\n\n**Output**\n \){answer}`)
     .addFields(
-      { name: 'Access', value: '`ALPHA`', inline: true },
-      { name: 'Status', value: '`STABLE`', inline: true },
+      { name: 'Access Level', value: '`ALPHA`', inline: true },
+      { name: 'Core Status', value: '`STABLE`', inline: true },
       { name: 'Operator', value: `\`${interaction.user.username}\``, inline: true }
     )
-    .setFooter({ text: 'Kryptonian OS • Fortress of Solitude' });
+    .setImage('attachment://supercomputer.gif') 
+    .setFooter({ text: 'Kryptonian OS • Fortress of Solitude' })
+    .setTimestamp();
 
   await interaction.editReply({
     embeds: [finalEmbed],
