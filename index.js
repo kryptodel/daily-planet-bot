@@ -396,7 +396,7 @@ client.on('interactionCreate', async interaction => {
       .setColor(chosen.color)
       .setAuthor({ name: 'LANTERN CORPS RECRUITMENT', iconURL: 'https://i.imgur.com/8Km9tLL.png' })
       .setTitle(`${chosen.emoji} ${chosen.name}`)
-      .setDescription(`${chosen.message}\n\n**Oath of the Corps:**\n\`\`\`\n ${chosen.oath\n\`\`\``)
+      .setDescription(`${chosen.message}\n\n**Oath of the Corps:**\n\`\`\`\n ${chosen.oath}\n\`\`\``)
       .setImage(`attachment://${chosen.gif}`)
       .addFields(
         { name: 'Recruit', value: interaction.user.username, inline: true },
