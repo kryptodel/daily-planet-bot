@@ -341,7 +341,7 @@ if (commandName === 'supercomputer') {
         name: 'FORTRESS OF SOLITUDE SUPERCOMPUTER',
         iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
       })
-      .setDescription(`\`\`\`${stage.bar}  \( {stage.text}\`\`\`\n**Query:** \` \){query}\``);
+      .setDescription(`\`\`\`${stage.bar}  ${stage.text}\`\`\`\n**Query:** \` ${query}\``);
 
     await interaction.editReply({ embeds: [embed] });
     await new Promise(r => setTimeout(r, 750));
@@ -354,7 +354,7 @@ if (commandName === 'supercomputer') {
       iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
     })
     .setThumbnail('https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png') // ← Logo pequena no canto
-    .setDescription(`**Query**\n\`\( {query}\`\n\n**Output**\n \){answer}`)
+    .setDescription(`**Query**\n\`\( ${query}\`\n\n**Output**\n ${answer}`)
     .addFields(
       { name: 'Access Level', value: '`ALPHA`', inline: true },
       { name: 'Core Status', value: '`STABLE`', inline: true },
