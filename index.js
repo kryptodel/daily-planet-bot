@@ -667,4 +667,44 @@ if (commandName === 'wanted') {
 }
 });
 
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+
+  if (message.content.trim().toUpperCase() === 'SHAZAM!') {
+    try {
+      const embed = new EmbedBuilder()
+        .setColor(0xFFD700)
+        .setTitle('⚡ SHAZAM! ⚡')
+        .setDescription(`**${message.author}** said the magic word and transformed!`)
+        .setImage('attachment://dc-animated.gif')
+        .setFooter({
+          text: 'The power of Shazam has been unleashed',
+          iconURL: message.author.displayAvatarURL()
+        })
+        .setTimestamp();
+
+      await message.reply({
+        embeds: [embed],
+        files: ['dc-animated.gif']
+      });
+
+    } catch (error) {
+      console.error('Error sending SHAZAM GIF:', error);
+
+      const fallbackEmbed = new EmbedBuilder()
+        .setColor(0xFFD700)
+        .setTitle('⚡ SHAZAM! ⚡')
+        .setDescription(`**${message.author}** said the magic word and transformed!`)
+        .setFooter({
+          text: 'The power of Shazam has been unleashed'
+        })
+        .setTimestamp();
+
+      await message.reply({
+        embeds: [fallbackEmbed]
+      });
+    }
+  }
+});
+
 client.login(process.env.TOKEN);
