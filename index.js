@@ -131,719 +131,175 @@ client.once('ready', async () => {
 
     
         client.on('interactionCreate', async interaction => {
+if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'Quote') {
+  const message = interaction.targetMessage;
+  const user = message.author;
+  const displayName = message.member?.displayName || user.username;
+  let content = message.content || '(sem texto)';
 
+  if (content.length > 320) {
+    content = content.slice(0, 317) + '...';
+  }
 
-    
+  await interaction.deferReply();
 
-    if (
-    interaction.isMessageContextMenuCommand() &&
-    interaction.commandName === "quote"
-) {
-
-    const message = interaction.targetMessage;
-    const user = message.author;
-    const member = await interaction.guild.members.fetch(user.id);
-
-    let content = message.content?.trim();
-
-    if (!content && message.attachments.size > 0)
-        content = "Image";
-
-    if (!content)
-        content = "No text";
-
-    await interaction.deferReply();
+  try {
+    const canvas = createCanvas(800, 700);
+    const ctx = canvas.getContext('2d');
 
     try {
-
-        const {
-            createCanvas,
-            loadImage
-        } = require("canvas");
-
-        const {
-            AttachmentBuilder
-        } = require("discord.js");
-
-        const canvas = createCanvas(1200, 700);
-        const ctx = canvas.getContext("2d");
-
-        const WIDTH = canvas.width;
-        const HEIGHT = canvas.height;
-
-        const COLORS = {
-
-            background: "#143A63",
-
-            panel: "#1A4E85",
-
-            gold: "#F2C94C",
-
-            white: "#F8F8F8",
-
-            black: "#111111",
-
-            shadow: "rgba(0,0,0,.25)",
-
-            text: "#202020"
-
-        };
-
-        const avatar = await loadImage(
-            member.displayAvatarURL({
-                extension: "png",
-                size: 512
-            })
-        );
-
-        const displayName = member.displayName;
-
-        const date = new Date(message.createdTimestamp)
-            .toLocaleDateString("pt-BR");
-
-        const time = new Date(message.createdTimestamp)
-            .toLocaleTimeString("pt-BR", {
-
-                hour: "2-digit",
-                minute: "2-digit"
-
-            });
-
-        function roundRect(x, y, w, h, r) {
-
-            ctx.beginPath();
-
-            ctx.moveTo(x + r, y);
-
-            ctx.arcTo(x + w, y, x + w, y + h, r);
-
-            ctx.arcTo(x + w, y + h, x, y + h, r);
-
-            ctx.arcTo(x, y + h, x, y, r);
-
-            ctx.arcTo(x, y, x + w, y, r);
-
-            ctx.closePath();
-
-        }
-
-        function drawHalftone() {
-
-            ctx.fillStyle = COLORS.background;
-            ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-            for (let y = 0; y < HEIGHT; y += 10) {
-
-                for (let x = 0; x < WIDTH; x += 10) {
-
-                    ctx.beginPath();
-
-                    ctx.arc(x, y, 1.2, 0, Math.PI * 2);
-
-                    ctx.fillStyle = "rgba(255,255,255,.05)";
-
-                    ctx.fill();
-
-                }
-
-            }
-
-        }
-
-        function drawSkyline() {
-
-            ctx.fillStyle = "#10263D";
-
-            for (let i = 0; i < 45; i++) {
-
-                const w = 18 + Math.random() * 28;
-
-                const h = 60 + Math.random() * 140;
-
-                ctx.fillRect(
-
-                    i * 28,
-
-                    HEIGHT - h,
-
-                    w,
-
-                    h
-
-                );
-
-            }
-
-        }
-
-        function drawFrame() {
-
-            ctx.lineWidth = 10;
-
-            ctx.strokeStyle = COLORS.gold;
-
-            ctx.strokeRect(
-
-                18,
-
-                18,
-
-                WIDTH - 36,
-
-                HEIGHT - 36
-
-            );
-
-            ctx.lineWidth = 5;
-
-            ctx.strokeStyle = COLORS.black;
-
-            ctx.strokeRect(
-
-                30,
-
-                30,
-
-                WIDTH - 60,
-
-                HEIGHT - 60
-
-            );
-
-        }
-
-        function drawHeader() {
-
-            ctx.fillStyle = COLORS.black;
-
-            ctx.fillRect(0, 0, WIDTH, 72);
-
-            ctx.fillStyle = COLORS.gold;
-
-            ctx.font = "bold 34px Anton";
-
-            ctx.textAlign = "center";
-
-            ctx.fillText(
-
-                "DAILY PLANET",
-
-                WIDTH / 2,
-
-                47
-
-            );
-
-            ctx.font = "20px Arial";
-
-            ctx.fillStyle = "#DDDDDD";
-
-            ctx.fillText(
-
-                "COMIC QUOTE",
-
-                WIDTH / 2,
-
-                67
-
-            );
-
-        }
-
-        drawHalftone();
-        drawSkyline();
-        drawFrame();
-        drawHeader();
+      const paper = await loadImage('paper.jpg');
+      ctx.drawImage(paper, 0, 0, 800, 700);
+    } catch {
+
+      ctx.fillStyle = '#f5f0e6';
+      ctx.fillRect(0, 0, 800, 700);
+
+      ctx.strokeStyle = '#c9d6e5';
+      ctx.lineWidth = 1.5;
+      for (let y = 90; y < 700; y += 32) {
+        ctx.beginPath();
+        ctx.moveTo(40, y);
+        ctx.lineTo(760, y);
+        ctx.stroke();
+      }
       
+      ctx.strokeStyle = '#e8a0a0';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(90, 0);
+      ctx.lineTo(90, 700);
+      ctx.stroke();
+    }
 
-function drawUserPanel() {
-
-    const panelX = 45;
-    const panelY = 95;
-    const panelW = 270;
-    const panelH = 560;
-
-
-    ctx.shadowColor = COLORS.shadow;
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetY = 8;
-
-    roundRect(
-        panelX,
-        panelY,
-        panelW,
-        panelH,
-        22
-    );
-
-    ctx.fillStyle = COLORS.panel;
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetY = 0;
-
-    ctx.lineWidth = 6;
-    ctx.strokeStyle = COLORS.black;
-    ctx.stroke();
-
-
-    ctx.fillStyle = COLORS.gold;
-
-    roundRect(
-        panelX,
-        panelY,
-        panelW,
-        75,
-        22
-    );
-
-    ctx.fill();
-
-
-    ctx.fillStyle = COLORS.black;
-    ctx.font = "bold 22px Anton";
-    ctx.textAlign = "center";
-
-    ctx.fillText(
-        "DAILY PLANET",
-        panelX + panelW / 2,
-        panelY + 46
-    );
-
-
-    const avatarSize = 180;
-
-    const avatarX =
-        panelX + (panelW - avatarSize) / 2;
-
-    const avatarY = panelY + 95;
+    const avatar = await loadImage(user.displayAvatarURL({ extension: 'png', size: 256 }));
 
     ctx.save();
-
     ctx.beginPath();
-
-    ctx.arc(
-        avatarX + avatarSize / 2,
-        avatarY + avatarSize / 2,
-        avatarSize / 2,
-        0,
-        Math.PI * 2
-    );
-
+    ctx.arc(160, 160, 75, 0, Math.PI * 2);
     ctx.closePath();
-
     ctx.clip();
-
-    ctx.drawImage(
-        avatar,
-        avatarX,
-        avatarY,
-        avatarSize,
-        avatarSize
-    );
-
+    ctx.drawImage(avatar, 85, 85, 150, 150);
     ctx.restore();
 
-    ctx.beginPath();
-
-    ctx.arc(
-        avatarX + avatarSize / 2,
-        avatarY + avatarSize / 2,
-        avatarSize / 2,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = COLORS.white;
-    ctx.stroke();
-
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = COLORS.black;
-    ctx.stroke();
-
-
-    ctx.fillStyle = COLORS.white;
-
-    ctx.font = "bold 34px Anton";
-
-    ctx.textAlign = "center";
-
-    let nickname = displayName;
-
-    if (nickname.length > 18)
-        nickname = nickname.slice(0, 15) + "...";
-
-    ctx.fillText(
-        nickname,
-        panelX + panelW / 2,
-        avatarY + 235
-    );
-
-
-    let role = "MEMBRO";
-
-    if (member.roles.highest) {
-
-        role = member.roles.highest.name.toUpperCase();
-
-        if (role === "@EVERYONE")
-            role = "MEMBRO";
-
-        if (role.length > 20)
-            role = role.slice(0, 17) + "...";
-
+    const imgData = ctx.getImageData(85, 85, 150, 150);
+    const data = imgData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+      data[i] = avg + 20;
+      data[i + 1] = avg + 10;
+      data[i + 2] = avg - 10;
     }
+    ctx.putImageData(imgData, 85, 85);
 
-    ctx.font = "20px Arial";
-    ctx.fillStyle = "#DDDDDD";
-
-    ctx.fillText(
-        role,
-        panelX + panelW / 2,
-        avatarY + 270
-    );
-
-
-    ctx.strokeStyle = COLORS.gold;
+    ctx.beginPath();
+    ctx.arc(160, 160, 75, 0, Math.PI * 2);
+    ctx.strokeStyle = '#5a4a3a';
     ctx.lineWidth = 3;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        panelX + 30,
-        avatarY + 295
-    );
-
-    ctx.lineTo(
-        panelX + panelW - 30,
-        avatarY + 295
-    );
-
     ctx.stroke();
 
+    ctx.fillStyle = '#3d2b1f';
+    ctx.font = 'bold 22px Georgia';
+    ctx.textAlign = 'left';
+    ctx.fillText(user.username, 260, 145);
 
-    ctx.fillStyle = COLORS.gold;
+    ctx.fillStyle = '#6b5b4b';
+    ctx.font = '18px Georgia';
+    ctx.fillText(displayName, 260, 175);
 
-    ctx.font = "bold 18px Arial";
+    ctx.fillStyle = '#4a3728';
+    ctx.textAlign = 'left';
 
-    ctx.fillText(
-        date,
-        panelX + panelW / 2,
-        avatarY + 335
-    );
+    let fontSize = 23;
+    const maxWidth = 620;
+    const startY = 280;
+    const maxY = 620;
 
+    while (fontSize >= 16) {
+      ctx.font = `${fontSize}px Georgia`;
+      const words = content.split(' ');
+      let lines = [];
+      let current = '';
 
-    ctx.fillStyle = "#CCCCCC";
-
-    ctx.font = "16px Arial";
-
-    ctx.fillText(
-        time,
-        panelX + panelW / 2,
-        avatarY + 362
-    );
-
-
-    ctx.fillStyle = "rgba(255,255,255,.06)";
-
-    roundRect(
-        panelX + 25,
-        panelY + 470,
-        panelW - 50,
-        55,
-        12
-    );
-
-    ctx.fill();
-
-    ctx.fillStyle = COLORS.gold;
-
-    ctx.font = "bold 22px Anton";
-
-    ctx.fillText(
-        "DAILY PLANET",
-        panelX + panelW / 2,
-        panelY + 505
-    );
-
-}
-
-
-drawUserPanel();
-
-
-const bubble = {
-    x: 350,
-    y: 100,
-    width: 810,
-    height: 520,
-    radius: 30
-};
-
-function drawSpeechBubble() {
-
-    ctx.shadowColor = COLORS.shadow;
-    ctx.shadowBlur = 22;
-    ctx.shadowOffsetY = 10;
-
-    ctx.fillStyle = COLORS.white;
-
-    roundRect(
-        bubble.x,
-        bubble.y,
-        bubble.width,
-        bubble.height,
-        bubble.radius
-    );
-
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetY = 0;
-
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = COLORS.black;
-    ctx.stroke();
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        bubble.x,
-        bubble.y + 170
-    );
-
-    ctx.lineTo(
-        bubble.x - 45,
-        bubble.y + 205
-    );
-
-    ctx.lineTo(
-        bubble.x,
-        bubble.y + 235
-    );
-
-    ctx.closePath();
-
-    ctx.fillStyle = COLORS.white;
-    ctx.fill();
-
-    ctx.lineWidth = 8;
-    ctx.stroke();
-
-
-    ctx.fillStyle = "rgba(0,0,0,.08)";
-    ctx.font = "160px Georgia";
-
-    ctx.textAlign = "left";
-
-    ctx.fillText(
-        "“",
-        bubble.x + 25,
-        bubble.y + 120
-    );
-
-    ctx.textAlign = "right";
-
-    ctx.fillText(
-        "”",
-        bubble.x + bubble.width - 25,
-        bubble.y + bubble.height - 15
-    );
-
-}
-
-drawSpeechBubble();
-
-
-
-const padding = 55;
-
-const maxWidth =
-    bubble.width - padding * 2;
-
-const maxHeight =
-    bubble.height - padding * 2;
-
-function splitLongWord(word, maxWidth) {
-
-    const pieces = [];
-
-    let current = "";
-
-    for (const letter of word) {
-
-        const test = current + letter;
-
+      for (const word of words) {
+        const test = current + word + ' ';
         if (ctx.measureText(test).width > maxWidth) {
-
-            pieces.push(current);
-
-            current = letter;
-
+          lines.push(current.trim());
+          current = word + ' ';
         } else {
-
-            current = test;
-
+          current = test;
         }
+      }
+      if (current) lines.push(current.trim());
 
+      const totalHeight = lines.length * (fontSize + 12);
+      if (startY + totalHeight < maxY) {
+        let y = startY;
+        for (const line of lines) {
+          ctx.fillText(line, 110, y);
+          y += fontSize + 12;
+        }
+        break;
+      }
+      fontSize -= 1;
     }
 
-    if (current.length)
-        pieces.push(current);
+    ctx.strokeStyle = '#5a4a3a';
+    ctx.fillStyle = '#5a4a3a';
+    ctx.lineWidth = 2;
 
-    return pieces;
+    function drawStar(x, y, size) {
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+        const px = x + size * Math.cos(angle);
+        const py = y + size * Math.sin(angle);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
 
-}
-
-function wrapText(text, size) {
-
-    ctx.font = `bold ${size}px Arial`;
-
-    const words = text.split(/\s+/);
-
-    const lines
-  
-const glow = ctx.createLinearGradient(
-    0,
-    0,
-    0,
-    180
-);
-
-glow.addColorStop(
-    0,
-    "rgba(255,255,255,.18)"
-);
-
-glow.addColorStop(
-    1,
-    "rgba(255,255,255,0)"
-);
-
-ctx.fillStyle = glow;
-
-ctx.fillRect(
-    0,
-    0,
-    WIDTH,
-    180
-);
-
-
-ctx.strokeStyle = "rgba(255,255,255,.06)";
-ctx.lineWidth = 2;
-
-for(let i=0;i<18;i++){
+    drawStar(720, 80, 14);
+    drawStar(750, 120, 10);
+    drawStar(690, 130, 8);
 
     ctx.beginPath();
-
-    ctx.moveTo(
-        360+i*42,
-        HEIGHT-90
-    );
-
-    ctx.lineTo(
-        380+i*42,
-        HEIGHT-60
-    );
-
+    ctx.moveTo(730, 200);
+    ctx.bezierCurveTo(730, 190, 750, 190, 750, 200);
+    ctx.bezierCurveTo(750, 215, 730, 230, 730, 240);
+    ctx.bezierCurveTo(730, 230, 710, 215, 710, 200);
+    ctx.bezierCurveTo(710, 190, 730, 190, 730, 200);
     ctx.stroke();
 
-}
+    ctx.beginPath();
+    ctx.arc(700, 320, 12, 0, Math.PI * 2);
+    ctx.arc(715, 315, 14, 0, Math.PI * 2);
+    ctx.arc(730, 320, 12, 0, Math.PI * 2);
+    ctx.stroke();
 
+    ctx.fillStyle = '#8a7a6a';
+    ctx.font = '14px Georgia';
+    ctx.textAlign = 'right';
+    ctx.fillText('Daily Planet  •  Quote', 760, 670);
 
-ctx.beginPath();
-
-ctx.arc(
-    WIDTH-70,
-    65,
-    26,
-    0,
-    Math.PI*2
-);
-
-ctx.fillStyle=COLORS.gold;
-ctx.fill();
-
-ctx.lineWidth=4;
-ctx.strokeStyle=COLORS.black;
-ctx.stroke();
-
-ctx.fillStyle=COLORS.black;
-
-ctx.font="bold 16px Anton";
-
-ctx.textAlign="center";
-
-ctx.fillText(
-    "DP",
-    WIDTH-70,
-    71
-);
-
-
-ctx.textAlign="left";
-
-ctx.fillStyle="rgba(255,255,255,.45)";
-
-ctx.font="18px Arial";
-
-ctx.fillText(
-
-    "Daily Planet • Comic Quote",
-
-    40,
-
-    HEIGHT-18
-
-);
-
-ctx.strokeStyle="rgba(255,255,255,.15)";
-ctx.lineWidth=2;
-
-ctx.strokeRect(
-    38,
-    38,
-    WIDTH-76,
-    HEIGHT-76
-);
-
-
-const attachment = new AttachmentBuilder(
-
-    canvas.toBuffer("image/png"),
-
-    {
-
-        name:"quote.png"
-
-    }
-
-);
-
-await interaction.editReply({
-
-    files:[attachment]
-
-});
-
-}catch(err){
-
-    console.error(err);
-
-    await interaction.editReply({
-
-        content:"❌ Falha ao gerar a quote."
-
+    const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
+      name: 'quote.png'
     });
 
+    await interaction.editReply({
+      files: [attachment]
+    });
+
+  } catch (error) {
+    console.error('Error generating quote:', error);
+    await interaction.editReply({
+      content: '❌ Failed to generate the quote.'
+    });
+  }
+  return;
 }
-
-return;
-
-    }
 
     
               
