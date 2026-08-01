@@ -128,163 +128,198 @@ client.once('ready', async () => {
   }
 });
 
-client.on('interactionCreate', async interaction => {
-if (
-  interaction.isContextMenuCommand() &&
-  interaction.commandType === ApplicationCommandType.Message
-) {
-      
-if (
-  interaction.isMessageContextMenuCommand?.() &&
-  interaction.commandName === 'quote'{
-)
-  const message = interaction.targetMessage;
-  const user = message.author;
-  let content = message.content || '*[sem texto]*';
 
-  if (content.length > 280) {
-    content = content.slice(0, 277) + '...';
-  }
+    
+        client.on('interactionCreate', async interaction => {
+  if (
+    interaction.isContextMenuCommand() &&
+    interaction.commandType === ApplicationCommandType.Message
+  ) {
 
-  await interaction.deferReply();
+    if (
+      interaction.isMessageContextMenuCommand?.() &&
+      interaction.commandName === 'quote'
+    ) {
 
-  try {
-    const canvas = createCanvas(900, 600);
-    const ctx = canvas.getContext('2d');
+      const message = interaction.targetMessage;
+      const user = message.author;
+      let content = message.content || '*[sem texto]*';
 
-    ctx.fillStyle = '#111';
-    ctx.fillRect(0, 0, 900, 600);
+      if (content.length > 280) {
+        content = content.slice(0, 277) + '...';
+      }
 
-    ctx.fillStyle = '#ffcc00';
-    ctx.fillRect(30, 30, 340, 420);
+      await interaction.deferReply();
 
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 10;
-    ctx.strokeRect(30, 30, 340, 420);
+      try {
+        const canvas = createCanvas(900, 600);
+        const ctx = canvas.getContext('2d');
 
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(42, 42, 316, 396);
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, 900, 600);
 
-    const avatar = await loadImage(user.displayAvatarURL({ extension: 'png', size: 512 }));
+        ctx.fillStyle = '#ffcc00';
+        ctx.fillRect(30, 30, 340, 420);
 
-    ctx.fillStyle = '#000';
-    ctx.fillRect(70, 70, 260, 260);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(78, 78, 244, 244);
-    ctx.drawImage(avatar, 85, 85, 230, 230);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(30, 30, 340, 420);
 
-    ctx.fillStyle = '#000';
-    ctx.font = 'bold 26px Impact';
-    ctx.textAlign = 'center';
-    ctx.fillText(user.username.toUpperCase(), 200, 380);
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(42, 42, 316, 396);
 
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#333';
-    ctx.fillText(new Date(message.createdTimestamp).toLocaleDateString('pt-BR'), 200, 410);
+        const avatar = await loadImage(
+          user.displayAvatarURL({
+            extension: 'png',
+            size: 512
+          })
+        );
 
-    ctx.fillStyle = '#00cfff';
-    ctx.fillRect(390, 30, 480, 420);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 10;
-    ctx.strokeRect(390, 30, 480, 420);
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(402, 42, 456, 396);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(70, 70, 260, 260);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.roundRect(430, 70, 400, 280, 25);
-    ctx.fill();
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 6;
-    ctx.stroke();
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(78, 78, 244, 244);
 
-    ctx.beginPath();
-    ctx.moveTo(430, 220);
-    ctx.lineTo(370, 260);
-    ctx.lineTo(430, 280);
-    ctx.closePath();
-    ctx.fillStyle = '#ffffff';
-    ctx.fill();
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 6;
-    ctx.stroke();
+        ctx.drawImage(avatar, 85, 85, 230, 230);
 
-    ctx.fillStyle = '#111';
-    ctx.textAlign = 'left';
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 26px Impact';
+        ctx.textAlign = 'center';
+        ctx.fillText(user.username.toUpperCase(), 200, 380);
 
-    let fontSize = 24;
-    let lineHeight = 32;
-    let maxWidth = 360;
-    let maxHeight = 240;
+        ctx.font = '16px Arial';
+        ctx.fillStyle = '#333';
+        ctx.fillText(
+          new Date(message.createdTimestamp).toLocaleDateString('pt-BR'),
+          200,
+          410
+        );
 
-    while (fontSize > 16) {
-      ctx.font = `bold ${fontSize}px Arial`;
-      const words = content.split(' ');
-      let lines = [];
-      let currentLine = '';
+        ctx.fillStyle = '#00cfff';
+        ctx.fillRect(390, 30, 480, 420);
 
-      for (const word of words) {
-        const test = currentLine + word + ' ';
-        if (ctx.measureText(test).width > maxWidth) {
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(390, 30, 480, 420);
+
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(402, 42, 456, 396);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(430, 70, 400, 280, 25);
+        ctx.fill();
+
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 6;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(430, 220);
+        ctx.lineTo(370, 260);
+        ctx.lineTo(430, 280);
+        ctx.closePath();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 6;
+        ctx.stroke();
+
+        ctx.fillStyle = '#111';
+        ctx.textAlign = 'left';
+
+        let fontSize = 24;
+        let lineHeight = 32;
+        const maxWidth = 360;
+        const maxHeight = 240;
+
+        while (fontSize > 16) {
+          ctx.font = `bold ${fontSize}px Arial`;
+
+          const words = content.split(' ');
+          const lines = [];
+          let currentLine = '';
+
+          for (const word of words) {
+            const test = currentLine + word + ' ';
+
+            if (ctx.measureText(test).width > maxWidth) {
+              lines.push(currentLine.trim());
+              currentLine = word + ' ';
+            } else {
+              currentLine = test;
+            }
+          }
+
           lines.push(currentLine.trim());
-          currentLine = word + ' ';
-        } else {
-          currentLine = test;
+
+          if (lines.length * lineHeight <= maxHeight) {
+            let y = 110;
+
+            for (const line of lines) {
+              ctx.fillText(line, 450, y);
+              y += lineHeight;
+            }
+
+            break;
+          }
+
+          fontSize -= 2;
+          lineHeight = fontSize + 8;
         }
-      }
-      lines.push(currentLine.trim());
 
-      if (lines.length * lineHeight <= maxHeight) {
-        let y = 110;
-        for (const l of lines) {
-          ctx.fillText(l, 450, y);
-          y += lineHeight;
+        ctx.fillStyle = '#ff3366';
+        ctx.fillRect(30, 470, 840, 100);
+
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(30, 470, 840, 100);
+
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 28px Impact';
+        ctx.textAlign = 'center';
+        ctx.fillText('DAILY PLANET  •  COMIC QUOTE', 450, 530);
+
+        ctx.fillStyle = '#000';
+
+        const corners = [
+          [30, 30],
+          [850, 30],
+          [30, 550],
+          [850, 550]
+        ];
+
+        for (const [x, y] of corners) {
+          ctx.fillRect(x, y, 25, 8);
+          ctx.fillRect(x, y, 8, 25);
         }
-        break;
+
+        const attachment = new AttachmentBuilder(
+          canvas.toBuffer('image/png'),
+          {
+            name: 'quote.png'
+          }
+        );
+
+        await interaction.editReply({
+          files: [attachment]
+        });
+
+      } catch (error) {
+        console.error('Error generating quote:', error);
+
+        await interaction.editReply({
+          content: '❌ Failed to generate the quote.'
+        });
       }
 
-      fontSize -= 2;
-      lineHeight = fontSize + 8;
+      return;
     }
-
-    ctx.fillStyle = '#ff3366';
-    ctx.fillRect(30, 470, 840, 100);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 8;
-    ctx.strokeRect(30, 470, 840, 100);
-
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 28px Impact';
-    ctx.textAlign = 'center';
-    ctx.fillText('DAILY PLANET  •  COMIC QUOTE', 450, 530);
-
-    ctx.fillStyle = '#000';
-    const corners = [
-      [30, 30], [850, 30], [30, 550], [850, 550]
-    ];
-    for (const [x, y] of corners) {
-      ctx.fillRect(x, y, 25, 8);
-      ctx.fillRect(x, y, 8, 25);
-    }
-
-    const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
-      name: 'quote.png'
-    });
-
-    await interaction.editReply({
-      files: [attachment]
-    });
-
-  } catch (error) {
-    console.error('Error generating quote:', error);
-    await interaction.editReply({
-      content: '❌ Failed to generate the quote.'
-    });
   }
-  return;
-}
     
   if (!interaction.isChatInputCommand()) return;
 
