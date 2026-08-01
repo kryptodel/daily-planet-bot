@@ -290,7 +290,7 @@ client.on('interactionCreate', async interaction => {
     ctx.font = 'bold 48px Georgia';
     ctx.textAlign = 'center';
 
-    const logo = await loadImage('daily-planet-logo.png');
+    const logo = await loadImage('Logo.png');
     ctx.drawImage(logo, 310, 105, 80, 80);
     ctx.fillText('Daily', 230, 155);
     
