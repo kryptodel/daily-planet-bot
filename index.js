@@ -134,7 +134,10 @@ if (
   interaction.commandType === ApplicationCommandType.Message
 ) {
       
-if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'quote') {
+if (
+  interaction.isMessageContextMenuCommand?.() &&
+  interaction.commandName === 'quote'
+)
   const message = interaction.targetMessage;
   const user = message.author;
   let content = message.content || '*[sem texto]*';
