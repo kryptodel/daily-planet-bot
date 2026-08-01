@@ -298,8 +298,6 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [embed] });
   }
 
-
-
     if (commandName === 'supercomputer') {
   const query = interaction.options.getString('query');
 
@@ -356,10 +354,8 @@ ${stage.text}
   const finalEmbed = new EmbedBuilder()
     .setColor(0x00d4ff)
     .setAuthor({
-      name: 'Fortress of Solitude',
-      iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
+      name: 'Fortress of Solitude Supercomputer',
     })
-    .setTitle('Supercomputer Analysis')
     .setThumbnail('https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png')
     .setDescription(
 `**Query**
@@ -372,11 +368,6 @@ ${query}
 
 ${answer}`
     )
-    .addFields(
-      { name: 'Access', value: '```ALPHA```', inline: true },
-      { name: 'Status', value: '```STABLE```', inline: true },
-      { name: 'Operator', value: `\`\`\`${interaction.user.username}\`\`\``, inline: true }
-    )
     .setImage('attachment://supercomputer.gif')
     .setFooter({ text: 'Kryptonian OS • Sector 2814' })
     .setTimestamp();
@@ -385,6 +376,7 @@ ${answer}`
     embeds: [finalEmbed],
     files: ['supercomputer.gif']
   });
+            }
        }
         if (commandName === 'lantern') {
   const corps = [
