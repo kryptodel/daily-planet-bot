@@ -11,7 +11,6 @@ app.listen(PORT, () => {
   console.log(`Keep-alive running on port ${PORT}`);
 });
 
-require('dotenv').config();
 const {
   Client,
   GatewayIntentBits,
@@ -262,9 +261,8 @@ client.on('interactionCreate', async interaction => {
     });
   }
       }
-    }
     return;
-
+   }
   if (!interaction.isChatInputCommand()) return;
 
   const { commandName } = interaction;
