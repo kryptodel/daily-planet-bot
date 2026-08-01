@@ -299,7 +299,8 @@ client.on('interactionCreate', async interaction => {
   }
 
 
-if (commandName === 'supercomputer') {
+
+    if (commandName === 'supercomputer') {
   const query = interaction.options.getString('query');
 
   const answers = [
@@ -328,7 +329,7 @@ if (commandName === 'supercomputer') {
   const answer = answers[Math.floor(Math.random() * answers.length)];
 
   const stages = [
-    { bar: '▰▱▱▱▱▱▱▱', text: 'Initializing matrix...' },
+    { bar: '▰▱▱▱▱▱▱▱', text: 'Initializing...' },
     { bar: '▰▰▰▱▱▱▱▱', text: 'Accessing archives...' },
     { bar: '▰▰▰▰▰▱▱▱', text: 'Running simulations...' },
     { bar: '▰▰▰▰▰▰▰▱', text: 'Finalizing...' }
@@ -341,50 +342,50 @@ if (commandName === 'supercomputer') {
       .setColor(0x00d4ff)
       .setDescription(
 `\`\`\`
-${stage.bar}  ${stage.text}
+${stage.bar}
+${stage.text}
 \`\`\`
 
 **Query:** \`${query}\``
       );
 
     await interaction.editReply({ embeds: [embed] });
-    await new Promise(r => setTimeout(r, 750));
+    await new Promise(r => setTimeout(r, 700));
   }
 
   const finalEmbed = new EmbedBuilder()
     .setColor(0x00d4ff)
-    .setTitle('SUPERCOMPUTER')
+    .setAuthor({
+      name: 'Fortress of Solitude',
+      iconURL: 'https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png'
+    })
+    .setTitle('Supercomputer Analysis')
     .setThumbnail('https://cdn.discordapp.com/attachments/1524550838758932686/1532553820838563954/Novo_projeto_56_D87546D.png')
     .setDescription(
 `**Query**
 
-\`${query}\`
+\`\`\`
+${query}
+\`\`\`
 
-**Output**
+**Result**
 
 ${answer}`
     )
     .addFields(
-      {
-        name: 'System',
-        value: `Access: \`ALPHA\`\nStatus: \`STABLE\`\nOperator: \`${interaction.user.username}\``,
-        inline: true
-      },
-      {
-        name: 'Details',
-        value: `OS: \`Kryptonian\`\nSector: \`2814\`\nLatency: \`0.03ms\``,
-        inline: true
-      }
+      { name: 'Access', value: '```ALPHA```', inline: true },
+      { name: 'Status', value: '```STABLE```', inline: true },
+      { name: 'Operator', value: `\`\`\`${interaction.user.username}\`\`\``, inline: true }
     )
     .setImage('attachment://supercomputer.gif')
-    .setFooter({ text: 'Fortress of Solitude • Access Authorized' })
+    .setFooter({ text: 'Kryptonian OS • Sector 2814' })
     .setTimestamp();
 
   await interaction.editReply({
     embeds: [finalEmbed],
     files: ['supercomputer.gif']
   });
-}
+       }
         if (commandName === 'lantern') {
   const corps = [
     {
