@@ -131,436 +131,719 @@ client.once('ready', async () => {
 
     
         client.on('interactionCreate', async interaction => {
-  if (
-  interaction.isMessageContextMenuCommand() &&
-  interaction.commandName === "quote"
+
+
+    
+
+    if (
+    interaction.isMessageContextMenuCommand() &&
+    interaction.commandName === "quote"
 ) {
-  const message = interaction.targetMessage;
-  const user = message.author;
 
-  let content = message.content?.trim();
+    const message = interaction.targetMessage;
+    const user = message.author;
+    const member = await interaction.guild.members.fetch(user.id);
 
-  if (!content && message.attachments.size > 0) {
-    content = "📷 Image";
-  }
+    let content = message.content?.trim();
 
-  if (!content) {
-    content = "*No text*";
-  }
+    if (!content && message.attachments.size > 0)
+        content = "Image";
 
-  await interaction.deferReply();
+    if (!content)
+        content = "No text";
 
-  try {
+    await interaction.deferReply();
 
-    const COLORS = [
-      {
-        bg: "#FFE66D",
-        panel: "#FF3B30",
-        accent: "#00C2FF"
-      },
-      {
-        bg: "#8EE3FF",
-        panel: "#FFCC00",
-        accent: "#FF3B30"
-      },
-      {
-        bg: "#FFD6E8",
-        panel: "#6C5CE7",
-        accent: "#FFCC00"
-      },
-      {
-        bg: "#D7FFD9",
-        panel: "#009966",
-        accent: "#FF4444"
-      }
-    ];
+    try {
 
-    const palette =
-      COLORS[Math.floor(Math.random() * COLORS.length)];
+        const {
+            createCanvas,
+            loadImage
+        } = require("canvas");
 
-    const canvas = createCanvas(1100, 700);
-    const ctx = canvas.getContext("2d");
+        const {
+            AttachmentBuilder
+        } = require("discord.js");
 
-    ctx.fillStyle = palette.bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const canvas = createCanvas(1200, 700);
+        const ctx = canvas.getContext("2d");
 
-    for (let y = 15; y < canvas.height; y += 18) {
-      for (let x = 15; x < canvas.width; x += 18) {
-        ctx.beginPath();
-        ctx.arc(x, y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(0,0,0,.08)";
-        ctx.fill();
-      }
-    }
+        const WIDTH = canvas.width;
+        const HEIGHT = canvas.height;
 
-    ctx.fillStyle = palette.panel;
-    ctx.fillRect(0, 0, canvas.width, 85);
+        const COLORS = {
 
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 85, canvas.width, 8);
+            background: "#143A63",
 
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 40px Impact";
+            panel: "#1A4E85",
+
+            gold: "#F2C94C",
+
+            white: "#F8F8F8",
+
+            black: "#111111",
+
+            shadow: "rgba(0,0,0,.25)",
+
+            text: "#202020"
+
+        };
+
+        const avatar = await loadImage(
+            member.displayAvatarURL({
+                extension: "png",
+                size: 512
+            })
+        );
+
+        const displayName = member.displayName;
+
+        const date = new Date(message.createdTimestamp)
+            .toLocaleDateString("pt-BR");
+
+        const time = new Date(message.createdTimestamp)
+            .toLocaleTimeString("pt-BR", {
+
+                hour: "2-digit",
+                minute: "2-digit"
+
+            });
+
+        function roundRect(x, y, w, h, r) {
+
+            ctx.beginPath();
+
+            ctx.moveTo(x + r, y);
+
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+
+            ctx.arcTo(x, y + h, x, y, r);
+
+            ctx.arcTo(x, y, x + w, y, r);
+
+            ctx.closePath();
+
+        }
+
+        function drawHalftone() {
+
+            ctx.fillStyle = COLORS.background;
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+            for (let y = 0; y < HEIGHT; y += 10) {
+
+                for (let x = 0; x < WIDTH; x += 10) {
+
+                    ctx.beginPath();
+
+                    ctx.arc(x, y, 1.2, 0, Math.PI * 2);
+
+                    ctx.fillStyle = "rgba(255,255,255,.05)";
+
+                    ctx.fill();
+
+                }
+
+            }
+
+        }
+
+        function drawSkyline() {
+
+            ctx.fillStyle = "#10263D";
+
+            for (let i = 0; i < 45; i++) {
+
+                const w = 18 + Math.random() * 28;
+
+                const h = 60 + Math.random() * 140;
+
+                ctx.fillRect(
+
+                    i * 28,
+
+                    HEIGHT - h,
+
+                    w,
+
+                    h
+
+                );
+
+            }
+
+        }
+
+        function drawFrame() {
+
+            ctx.lineWidth = 10;
+
+            ctx.strokeStyle = COLORS.gold;
+
+            ctx.strokeRect(
+
+                18,
+
+                18,
+
+                WIDTH - 36,
+
+                HEIGHT - 36
+
+            );
+
+            ctx.lineWidth = 5;
+
+            ctx.strokeStyle = COLORS.black;
+
+            ctx.strokeRect(
+
+                30,
+
+                30,
+
+                WIDTH - 60,
+
+                HEIGHT - 60
+
+            );
+
+        }
+
+        function drawHeader() {
+
+            ctx.fillStyle = COLORS.black;
+
+            ctx.fillRect(0, 0, WIDTH, 72);
+
+            ctx.fillStyle = COLORS.gold;
+
+            ctx.font = "bold 34px Anton";
+
+            ctx.textAlign = "center";
+
+            ctx.fillText(
+
+                "DAILY PLANET",
+
+                WIDTH / 2,
+
+                47
+
+            );
+
+            ctx.font = "20px Arial";
+
+            ctx.fillStyle = "#DDDDDD";
+
+            ctx.fillText(
+
+                "COMIC QUOTE",
+
+                WIDTH / 2,
+
+                67
+
+            );
+
+        }
+
+        drawHalftone();
+        drawSkyline();
+        drawFrame();
+        drawHeader();
+      
+
+function drawUserPanel() {
+
+    const panelX = 45;
+    const panelY = 95;
+    const panelW = 270;
+    const panelH = 560;
+
+
+    ctx.shadowColor = COLORS.shadow;
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetY = 8;
+
+    roundRect(
+        panelX,
+        panelY,
+        panelW,
+        panelH,
+        22
+    );
+
+    ctx.fillStyle = COLORS.panel;
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = COLORS.black;
+    ctx.stroke();
+
+
+    ctx.fillStyle = COLORS.gold;
+
+    roundRect(
+        panelX,
+        panelY,
+        panelW,
+        75,
+        22
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle = COLORS.black;
+    ctx.font = "bold 22px Anton";
     ctx.textAlign = "center";
+
     ctx.fillText(
-      "DAILY PLANET • COMIC QUOTE",
-      canvas.width / 2,
-      55
+        "DAILY PLANET",
+        panelX + panelW / 2,
+        panelY + 46
     );
 
-    ctx.fillStyle = palette.accent;
-    ctx.fillRect(45, 120, 270, 520);
 
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 8;
-    ctx.strokeRect(45, 120, 270, 520);
+    const avatarSize = 180;
 
-    const avatar = await loadImage(
-      user.displayAvatarURL({
-        extension: "png",
-        size: 512
-      })
-    );
+    const avatarX =
+        panelX + (panelW - avatarSize) / 2;
+
+    const avatarY = panelY + 95;
 
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(180, 250, 90, 0, Math.PI * 2);
+
+    ctx.arc(
+        avatarX + avatarSize / 2,
+        avatarY + avatarSize / 2,
+        avatarSize / 2,
+        0,
+        Math.PI * 2
+    );
+
     ctx.closePath();
+
     ctx.clip();
 
-    ctx.drawImage(avatar, 90, 160, 180, 180);
+    ctx.drawImage(
+        avatar,
+        avatarX,
+        avatarY,
+        avatarSize,
+        avatarSize
+    );
 
     ctx.restore();
 
     ctx.beginPath();
-    ctx.arc(180, 250, 92, 0, Math.PI * 2);
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = "#000";
-    ctx.stroke();
 
-    ctx.beginPath();
-    ctx.arc(180, 250, 100, 0, Math.PI * 2);
-    ctx.lineWidth = 6;
-    ctx.strokeStyle = "#fff";
-    ctx.stroke();
-
-    ctx.fillStyle = "#000";
-    ctx.fillRect(60, 390, 240, 85);
-
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 28px Impact";
-    ctx.textAlign = "center";
-
-    let username = user.username.toUpperCase();
-
-    if (username.length > 16) {
-      username = username.slice(0, 13) + "...";
-    }
-
-    ctx.fillText(username, 180, 435);
-
-    ctx.font = "20px Arial";
-    ctx.fillText(
-      new Date(message.createdTimestamp).toLocaleDateString(),
-      180,
-      465
+    ctx.arc(
+        avatarX + avatarSize / 2,
+        avatarY + avatarSize / 2,
+        avatarSize / 2,
+        0,
+        Math.PI * 2
     );
 
-    ctx.fillStyle = "#FFFFFF";
-    ctx.beginPath();
-    ctx.roundRect(355, 125, 700, 470, 30);
-    ctx.fill();
-
-    ctx.strokeStyle = "#000";
     ctx.lineWidth = 8;
+    ctx.strokeStyle = COLORS.white;
     ctx.stroke();
 
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = COLORS.black;
+    ctx.stroke();
+
+
+    ctx.fillStyle = COLORS.white;
+
+    ctx.font = "bold 34px Anton";
+
+    ctx.textAlign = "center";
+
+    let nickname = displayName;
+
+    if (nickname.length > 18)
+        nickname = nickname.slice(0, 15) + "...";
+
+    ctx.fillText(
+        nickname,
+        panelX + panelW / 2,
+        avatarY + 235
+    );
+
+
+    let role = "MEMBRO";
+
+    if (member.roles.highest) {
+
+        role = member.roles.highest.name.toUpperCase();
+
+        if (role === "@EVERYONE")
+            role = "MEMBRO";
+
+        if (role.length > 20)
+            role = role.slice(0, 17) + "...";
+
+    }
+
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "#DDDDDD";
+
+    ctx.fillText(
+        role,
+        panelX + panelW / 2,
+        avatarY + 270
+    );
+
+
+    ctx.strokeStyle = COLORS.gold;
+    ctx.lineWidth = 3;
+
     ctx.beginPath();
-    ctx.moveTo(355, 280);
-    ctx.lineTo(300, 320);
-    ctx.lineTo(355, 340);
+
+    ctx.moveTo(
+        panelX + 30,
+        avatarY + 295
+    );
+
+    ctx.lineTo(
+        panelX + panelW - 30,
+        avatarY + 295
+    );
+
+    ctx.stroke();
+
+
+    ctx.fillStyle = COLORS.gold;
+
+    ctx.font = "bold 18px Arial";
+
+    ctx.fillText(
+        date,
+        panelX + panelW / 2,
+        avatarY + 335
+    );
+
+
+    ctx.fillStyle = "#CCCCCC";
+
+    ctx.font = "16px Arial";
+
+    ctx.fillText(
+        time,
+        panelX + panelW / 2,
+        avatarY + 362
+    );
+
+
+    ctx.fillStyle = "rgba(255,255,255,.06)";
+
+    roundRect(
+        panelX + 25,
+        panelY + 470,
+        panelW - 50,
+        55,
+        12
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle = COLORS.gold;
+
+    ctx.font = "bold 22px Anton";
+
+    ctx.fillText(
+        "DAILY PLANET",
+        panelX + panelW / 2,
+        panelY + 505
+    );
+
+}
+
+
+drawUserPanel();
+
+
+const bubble = {
+    x: 350,
+    y: 100,
+    width: 810,
+    height: 520,
+    radius: 30
+};
+
+function drawSpeechBubble() {
+
+    ctx.shadowColor = COLORS.shadow;
+    ctx.shadowBlur = 22;
+    ctx.shadowOffsetY = 10;
+
+    ctx.fillStyle = COLORS.white;
+
+    roundRect(
+        bubble.x,
+        bubble.y,
+        bubble.width,
+        bubble.height,
+        bubble.radius
+    );
+
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = COLORS.black;
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        bubble.x,
+        bubble.y + 170
+    );
+
+    ctx.lineTo(
+        bubble.x - 45,
+        bubble.y + 205
+    );
+
+    ctx.lineTo(
+        bubble.x,
+        bubble.y + 235
+    );
+
     ctx.closePath();
 
-    ctx.fillStyle = "#FFFFFF";
+    ctx.fillStyle = COLORS.white;
     ctx.fill();
 
-    ctx.strokeStyle = "#000";
     ctx.lineWidth = 8;
     ctx.stroke();
 
+
     ctx.fillStyle = "rgba(0,0,0,.08)";
-    ctx.font = "180px Impact";
+    ctx.font = "160px Georgia";
+
     ctx.textAlign = "left";
 
-    ctx.fillText("“", 395, 255);
+    ctx.fillText(
+        "“",
+        bubble.x + 25,
+        bubble.y + 120
+    );
 
-    ctx.fillStyle = "#111";
-        const bubbleX = 410;
-    const bubbleY = 170;
-    const bubbleWidth = 590;
-    const bubbleHeight = 340;
+    ctx.textAlign = "right";
 
-    let fontSize = 34;
-    const minFont = 18;
-    const padding = 35;
+    ctx.fillText(
+        "”",
+        bubble.x + bubble.width - 25,
+        bubble.y + bubble.height - 15
+    );
 
-    function wrapText(text, size) {
-      ctx.font = `bold ${size}px Arial`;
+}
 
-      const words = text.split(/\s+/);
-      const lines = [];
-      let current = "";
+drawSpeechBubble();
 
-      for (const word of words) {
 
-        if (ctx.measureText(word).width > bubbleWidth - padding * 2) {
 
-          let piece = "";
+const padding = 55;
 
-          for (const letter of word) {
+const maxWidth =
+    bubble.width - padding * 2;
 
-            if (
-              ctx.measureText(piece + letter).width >
-              bubbleWidth - padding * 2
-            ) {
+const maxHeight =
+    bubble.height - padding * 2;
 
-              if (piece.length) {
-                lines.push(piece);
-              }
+function splitLongWord(word, maxWidth) {
 
-              piece = letter;
+    const pieces = [];
 
-            } else {
+    let current = "";
 
-              piece += letter;
+    for (const letter of word) {
 
-            }
+        const test = current + letter;
 
-          }
+        if (ctx.measureText(test).width > maxWidth) {
 
-          if (piece.length) {
-            current = piece + " ";
-          }
+            pieces.push(current);
 
-          continue;
-        }
-
-        const test = current + word + " ";
-
-        if (
-          ctx.measureText(test).width >
-          bubbleWidth - padding * 2
-        ) {
-
-          lines.push(current.trim());
-          current = word + " ";
+            current = letter;
 
         } else {
 
-          current = test;
+            current = test;
 
         }
 
-      }
-
-      if (current.trim()) {
-        lines.push(current.trim());
-      }
-
-      return lines;
     }
 
-    let lines = [];
+    if (current.length)
+        pieces.push(current);
 
-    while (fontSize >= minFont) {
+    return pieces;
 
-      lines = wrapText(content, fontSize);
+}
 
-      const lineHeight = fontSize + 12;
+function wrapText(text, size) {
 
-      if (
-        lines.length * lineHeight <= bubbleHeight - padding * 2
-      ) {
-        break;
-      }
+    ctx.font = `bold ${size}px Arial`;
 
-      fontSize--;
+    const words = text.split(/\s+/);
 
-    }
+    const lines
+  
+const glow = ctx.createLinearGradient(
+    0,
+    0,
+    0,
+    180
+);
 
-    ctx.font = `bold ${fontSize}px Arial`;
+glow.addColorStop(
+    0,
+    "rgba(255,255,255,.18)"
+);
 
-    const lineHeight = fontSize + 12;
+glow.addColorStop(
+    1,
+    "rgba(255,255,255,0)"
+);
 
-    const maxVisibleLines = Math.floor(
-      (bubbleHeight - padding * 2) / lineHeight
+ctx.fillStyle = glow;
+
+ctx.fillRect(
+    0,
+    0,
+    WIDTH,
+    180
+);
+
+
+ctx.strokeStyle = "rgba(255,255,255,.06)";
+ctx.lineWidth = 2;
+
+for(let i=0;i<18;i++){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        360+i*42,
+        HEIGHT-90
     );
 
-    if (lines.length > maxVisibleLines) {
-
-      lines = lines.slice(0, maxVisibleLines);
-
-      let last = lines[maxVisibleLines - 1];
-
-      while (
-        ctx.measureText(last + "...").width >
-        bubbleWidth - padding * 2
-      ) {
-
-        last = last.slice(0, -1);
-
-      }
-
-      lines[maxVisibleLines - 1] = last + "...";
-
-    }
-
-    const totalHeight = lines.length * lineHeight;
-
-    let y =
-      bubbleY +
-      (bubbleHeight - totalHeight) / 2 +
-      fontSize;
-
-    ctx.fillStyle = "#111";
-    ctx.textAlign = "left";
-
-    for (const line of lines) {
-
-      ctx.fillText(
-        line,
-        bubbleX + padding,
-        y
-      );
-
-      y += lineHeight;
-
-    }
-        ctx.fillStyle = "#000";
-    ctx.font = "bold 46px Impact";
-    ctx.textAlign = "right";
-    ctx.fillText("”", 980, 520);
-
-    function starburst(cx, cy, spikes, outerRadius, innerRadius, color) {
-      let rot = Math.PI / 2 * 3;
-      const step = Math.PI / spikes;
-
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - outerRadius);
-
-      for (let i = 0; i < spikes; i++) {
-
-        let x = cx + Math.cos(rot) * outerRadius;
-        let y = cy + Math.sin(rot) * outerRadius;
-        ctx.lineTo(x, y);
-
-        rot += step;
-
-        x = cx + Math.cos(rot) * innerRadius;
-        y = cy + Math.sin(rot) * innerRadius;
-        ctx.lineTo(x, y);
-
-        rot += step;
-      }
-
-      ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = "#000";
-      ctx.stroke();
-    }
-
-    starburst(1010, 90, 14, 55, 28, "#FFD500");
-
-    ctx.fillStyle = "#000";
-    ctx.font = "bold 22px Impact";
-    ctx.textAlign = "center";
-    ctx.fillText("QUOTE!", 1010, 97);
-
-    starburst(80, 90, 12, 40, 20, "#00D4FF");
-
-    ctx.fillStyle = "#000";
-    ctx.font = "bold 18px Impact";
-    ctx.fillText("WOW!", 80, 95);
-
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 640, canvas.width, 60);
-
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 26px Impact";
-    ctx.textAlign = "center";
-    ctx.fillText(
-      "DAILY PLANET • THE MOST TRUSTED NEWSPAPER IN METROPOLIS",
-      canvas.width / 2,
-      678
+    ctx.lineTo(
+        380+i*42,
+        HEIGHT-60
     );
 
-    ctx.strokeStyle = "#FFFFFF";
-    ctx.lineWidth = 5;
+    ctx.stroke();
 
-    const corners = [
-      [45, 120],
-      [1045, 120],
-      [45, 595],
-      [1045, 595]
-    ];
+}
 
-    for (const [x, y] of corners) {
-      ctx.beginPath();
-      ctx.moveTo(x, y + 20);
-      ctx.lineTo(x, y);
-      ctx.lineTo(x + 20, y);
-      ctx.stroke();
+
+ctx.beginPath();
+
+ctx.arc(
+    WIDTH-70,
+    65,
+    26,
+    0,
+    Math.PI*2
+);
+
+ctx.fillStyle=COLORS.gold;
+ctx.fill();
+
+ctx.lineWidth=4;
+ctx.strokeStyle=COLORS.black;
+ctx.stroke();
+
+ctx.fillStyle=COLORS.black;
+
+ctx.font="bold 16px Anton";
+
+ctx.textAlign="center";
+
+ctx.fillText(
+    "DP",
+    WIDTH-70,
+    71
+);
+
+
+ctx.textAlign="left";
+
+ctx.fillStyle="rgba(255,255,255,.45)";
+
+ctx.font="18px Arial";
+
+ctx.fillText(
+
+    "Daily Planet • Comic Quote",
+
+    40,
+
+    HEIGHT-18
+
+);
+
+ctx.strokeStyle="rgba(255,255,255,.15)";
+ctx.lineWidth=2;
+
+ctx.strokeRect(
+    38,
+    38,
+    WIDTH-76,
+    HEIGHT-76
+);
+
+
+const attachment = new AttachmentBuilder(
+
+    canvas.toBuffer("image/png"),
+
+    {
+
+        name:"quote.png"
+
     }
 
-    ctx.fillStyle = "rgba(255,255,255,.25)";
-    ctx.fillRect(55, 130, 250, 8);
+);
 
-    ctx.fillStyle = "rgba(255,255,255,.15)";
-    ctx.fillRect(365, 135, 680, 6);
+await interaction.editReply({
 
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 2;
+    files:[attachment]
 
-    for (let i = 0; i < 12; i++) {
+});
 
-      const x = 360 + i * 58;
+}catch(err){
 
-      ctx.beginPath();
-      ctx.moveTo(x, 610);
-      ctx.lineTo(x + 30, 640);
-      ctx.stroke();
-
-    }
-
-    const attachment = new AttachmentBuilder(
-      canvas.toBuffer("image/png"),
-      {
-        name: "quote.png"
-      }
-    );
+    console.error(err);
 
     await interaction.editReply({
-      files: [attachment]
+
+        content:"❌ Falha ao gerar a quote."
+
     });
 
-  } catch (error) {
+}
 
-    console.error(error);
+return;
 
-    await interaction.editReply({
-      content: "❌ Failed to generate the quote."
-    });
-
-  }
-
-  return;
-  }
-
-    
+    }
 
     
               
