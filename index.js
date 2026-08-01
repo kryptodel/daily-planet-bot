@@ -131,195 +131,157 @@ client.once('ready', async () => {
 
     
         client.on('interactionCreate', async interaction => {
-  if (
-    interaction.isContextMenuCommand() &&
-    interaction.commandType === ApplicationCommandType.Message
-  ) {
-
-    if (
-      interaction.isMessageContextMenuCommand?.() &&
-      interaction.commandName === 'quote'
-    ) {
-
-      const message = interaction.targetMessage;
-      const user = message.author;
-      let content = message.content || '*[sem texto]*';
-
-      if (content.length > 280) {
-        content = content.slice(0, 277) + '...';
-      }
-
-      await interaction.deferReply();
-
-      try {
-        const canvas = createCanvas(900, 600);
-        const ctx = canvas.getContext('2d');
-
-        ctx.fillStyle = '#111';
-        ctx.fillRect(0, 0, 900, 600);
-
-        ctx.fillStyle = '#ffcc00';
-        ctx.fillRect(30, 30, 340, 420);
-
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 10;
-        ctx.strokeRect(30, 30, 340, 420);
-
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(42, 42, 316, 396);
-
-        const avatar = await loadImage(
-          user.displayAvatarURL({
-            extension: 'png',
-            size: 512
-          })
-        );
-
-        ctx.fillStyle = '#000';
-        ctx.fillRect(70, 70, 260, 260);
-
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(78, 78, 244, 244);
-
-        ctx.drawImage(avatar, 85, 85, 230, 230);
-
-        ctx.fillStyle = '#000';
-        ctx.font = 'bold 26px Impact';
-        ctx.textAlign = 'center';
-        ctx.fillText(user.username.toUpperCase(), 200, 380);
-
-        ctx.font = '16px Arial';
-        ctx.fillStyle = '#333';
-        ctx.fillText(
-          new Date(message.createdTimestamp).toLocaleDateString('pt-BR'),
-          200,
-          410
-        );
-
-        ctx.fillStyle = '#00cfff';
-        ctx.fillRect(390, 30, 480, 420);
-
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 10;
-        ctx.strokeRect(390, 30, 480, 420);
-
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(402, 42, 456, 396);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.roundRect(430, 70, 400, 280, 25);
-        ctx.fill();
-
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 6;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(430, 220);
-        ctx.lineTo(370, 260);
-        ctx.lineTo(430, 280);
-        ctx.closePath();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.fill();
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 6;
-        ctx.stroke();
-
-        ctx.fillStyle = '#111';
-        ctx.textAlign = 'left';
-
-        let fontSize = 24;
-        let lineHeight = 32;
-        const maxWidth = 360;
-        const maxHeight = 240;
-
-        while (fontSize > 16) {
-          ctx.font = `bold ${fontSize}px Arial`;
-
-          const words = content.split(' ');
-          const lines = [];
-          let currentLine = '';
-
-          for (const word of words) {
-            const test = currentLine + word + ' ';
-
-            if (ctx.measureText(test).width > maxWidth) {
-              lines.push(currentLine.trim());
-              currentLine = word + ' ';
-            } else {
-              currentLine = test;
-            }
-          }
-
-          lines.push(currentLine.trim());
-
-          if (lines.length * lineHeight <= maxHeight) {
-            let y = 110;
-
-            for (const line of lines) {
-              ctx.fillText(line, 450, y);
-              y += lineHeight;
-            }
-
-            break;
-          }
-
-          fontSize -= 2;
-          lineHeight = fontSize + 8;
-        }
-
-        ctx.fillStyle = '#ff3366';
-        ctx.fillRect(30, 470, 840, 100);
-
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 8;
-        ctx.strokeRect(30, 470, 840, 100);
-
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 28px Impact';
-        ctx.textAlign = 'center';
-        ctx.fillText('DAILY PLANET  •  COMIC QUOTE', 450, 530);
-
-        ctx.fillStyle = '#000';
-
-        const corners = [
-          [30, 30],
-          [850, 30],
-          [30, 550],
-          [850, 550]
-        ];
-
-        for (const [x, y] of corners) {
-          ctx.fillRect(x, y, 25, 8);
-          ctx.fillRect(x, y, 8, 25);
-        }
-
-        const attachment = new AttachmentBuilder(
-          canvas.toBuffer('image/png'),
-          {
-            name: 'quote.png'
-          }
-        );
-
-        await interaction.editReply({
-          files: [attachment]
-        });
-
-      } catch (error) {
-        console.error('Error generating quote:', error);
-
-        await interaction.editReply({
-          content: '❌ Failed to generate the quote.'
-        });
-      }
-
-      return;
-    }
   
+        
+              if (
+  interaction.isMessageContextMenuCommand() &&
+  interaction.commandName === 'Quote'
+) {
+  const message = interaction.targetMessage;
+  const user = message.author;
+  let content = message.content || '*[sem texto]*';
+
+  if (content.length > 300) {
+    content = content.slice(0, 297) + '...';
+  }
+
+  await interaction.deferReply();
+
+  try {
+    const canvas = createCanvas(850, 480);
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(0, 0, 850, 480);
+
+    ctx.fillStyle = '#1e293b';
+    ctx.beginPath();
+    ctx.roundRect(25, 25, 800, 430, 20);
+    ctx.fill();
+
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    const avatar = await loadImage(
+      user.displayAvatarURL({
+        extension: 'png',
+        size: 256
+      })
+    );
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(130, 160, 70, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(avatar, 60, 90, 140, 140);
+    ctx.restore();
+
+    ctx.beginPath();
+    ctx.arc(130, 160, 70, 0, Math.PI * 2);
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 26px Georgia';
+    ctx.textAlign = 'left';
+    ctx.fillText(user.username, 230, 145);
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '16px Georgia';
+    ctx.fillText(
+      new Date(message.createdTimestamp).toLocaleString('pt-BR'),
+      230,
+      175
+    );
+
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath();
+    ctx.roundRect(60, 250, 730, 170, 18);
+    ctx.fill();
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.beginPath();
+    ctx.roundRect(55, 245, 730, 170, 18);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(130, 245);
+    ctx.lineTo(110, 215);
+    ctx.lineTo(160, 245);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#0f172a';
+    ctx.textAlign = 'left';
+
+    let fontSize = 22;
+    const maxWidth = 680;
+    const maxLines = 5;
+
+    while (fontSize >= 16) {
+      ctx.font = `${fontSize}px Georgia`;
+
+      const words = content.split(' ');
+      const lines = [];
+      let current = '';
+
+      for (const word of words) {
+        const test = current + word + ' ';
+
+        if (ctx.measureText(test).width > maxWidth) {
+          lines.push(current.trim());
+          current = word + ' ';
+        } else {
+          current = test;
+        }
+      }
+
+      if (current) {
+        lines.push(current.trim());
+      }
+
+      if (lines.length <= maxLines) {
+        let y = 285;
+
+        for (const line of lines) {
+          ctx.fillText(line, 80, y);
+          y += fontSize + 10;
+        }
+
+        break;
+      }
+
+      fontSize--;
+    }
+
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 14px Georgia';
+    ctx.textAlign = 'right';
+    ctx.fillText('DAILY PLANET  •  QUOTE', 780, 440);
+
+    const attachment = new AttachmentBuilder(
+      canvas.toBuffer('image/png'),
+      {
+        name: 'quote.png'
+      }
+    );
+
+    await interaction.editReply({
+      files: [attachment]
+    });
+  } catch (error) {
+    console.error('Error generating quote:', error);
+
+    await interaction.editReply({
+      content: '❌ Failed to generate the quote.'
+    });
+  }
+
+  return;
+              }
     
   if (!interaction.isChatInputCommand()) return;
 
