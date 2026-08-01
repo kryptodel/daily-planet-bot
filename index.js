@@ -135,7 +135,7 @@ client.once('ready', async () => {
         
               if (
   interaction.isMessageContextMenuCommand() &&
-  interaction.commandName === 'Quote'
+  interaction.commandName === 'quote'
 ) {
   const message = interaction.targetMessage;
   const user = message.author;
