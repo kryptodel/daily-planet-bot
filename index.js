@@ -377,7 +377,7 @@ ${answer}`
     files: ['supercomputer.gif']
   });
             }
-       }
+       
         if (commandName === 'lantern') {
   const corps = [
     {
