@@ -234,7 +234,6 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ content: '@here', embeds: [embed] });
   }
 
-    
     if (commandName === 'reporter') {
   const target = interaction.options.getUser('user');
 
@@ -263,7 +262,6 @@ client.on('interactionCreate', async interaction => {
     ctx.fillStyle = '#f8f6f1';
     ctx.fillRect(0, 0, 700, 1000);
 
-
     ctx.strokeStyle = '#1a1a1a';
     ctx.lineWidth = 8;
     ctx.strokeRect(20, 20, 660, 960);
@@ -285,85 +283,97 @@ client.on('interactionCreate', async interaction => {
     ctx.fillStyle = '#ddd';
     ctx.fill();
 
-    
     ctx.fillStyle = '#111';
-    ctx.font = 'bold 48px Georgia';
+    ctx.font = 'bold 46px Georgia';
     ctx.textAlign = 'center';
+    ctx.fillText('Daily', 220, 155);
 
-    const logo = await loadImage('Logo.png');
-    ctx.drawImage(logo, 310, 105, 80, 80);
-    ctx.fillText('Daily', 230, 155);
-    
-    ctx.beginPath();
-    ctx.arc(350, 140, 32, 0, Math.PI * 2);
-    ctx.fillStyle = '#1a4a8a';
-    ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 14px Arial';
-    ctx.fillText('DP', 350, 146);
+    try {
+      const logo = await loadImage('Logo.png');
+      ctx.drawImage(logo, 310, 105, 80, 80);
+    } catch (e) {
+      ctx.beginPath();
+      ctx.arc(350, 140, 32, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a4a8a';
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 14px Arial';
+      ctx.fillText('DP', 350, 146);
+    }
 
     ctx.fillStyle = '#111';
-    ctx.font = 'bold 48px Georgia';
-    ctx.fillText('Planet', 480, 155);
+    ctx.font = 'bold 46px Georgia';
+    ctx.fillText('Planet', 490, 155);
 
     ctx.fillStyle = '#555';
     ctx.font = '14px Georgia';
-    ctx.fillText("METROPOLIS' GREATEST NEWSPAPER", 350, 195);
+    ctx.fillText("METROPOLIS' GREATEST NEWSPAPER", 350, 200);
 
     ctx.beginPath();
-    ctx.moveTo(80, 220);
-    ctx.lineTo(620, 220);
+    ctx.moveTo(80, 225);
+    ctx.lineTo(620, 225);
     ctx.strokeStyle = '#222';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
+    const photoSize = 260;
+    const photoX = 80;
+    const photoY = 260;
+
     ctx.fillStyle = '#222';
-    ctx.fillRect(70, 250, 280, 340);
+    ctx.fillRect(photoX - 8, photoY - 8, photoSize + 16, photoSize + 16);
     ctx.fillStyle = '#fff';
-    ctx.fillRect(80, 260, 260, 320);
+    ctx.fillRect(photoX - 3, photoY - 3, photoSize + 6, photoSize + 6);
 
     const avatar = await loadImage(
       target.displayAvatarURL({ extension: 'png', size: 512 })
     );
-    ctx.drawImage(avatar, 90, 270, 240, 300);
+    ctx.drawImage(avatar, photoX, photoY, photoSize, photoSize);
 
     ctx.save();
-    ctx.translate(520, 420);
-    ctx.rotate(-0.15);
+    ctx.translate(520, 400);
+    ctx.rotate(-0.25);
 
-    ctx.fillStyle = '#8a8a8a';
-    ctx.font = 'bold 72px Georgia';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.font = 'bold 78px Georgia';
     ctx.textAlign = 'center';
+    ctx.fillText('PRESS', 4, 4);
+
+    ctx.fillStyle = 'rgba(90, 90, 90, 0.75)';
     ctx.fillText('PRESS', 0, 0);
+
+    ctx.strokeStyle = 'rgba(60, 60, 60, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.strokeText('PRESS', 0, 0);
 
     ctx.restore();
 
     ctx.fillStyle = '#fff';
-    ctx.fillRect(70, 620, 560, 160);
+    ctx.fillRect(70, 560, 560, 150);
     ctx.strokeStyle = '#222';
     ctx.lineWidth = 3;
-    ctx.strokeRect(70, 620, 560, 160);
+    ctx.strokeRect(70, 560, 560, 150);
 
     ctx.fillStyle = '#111';
-    ctx.font = 'bold 42px Georgia';
+    ctx.font = 'bold 40px Georgia';
     ctx.textAlign = 'center';
-    ctx.fillText(target.username.toUpperCase(), 350, 690);
+    ctx.fillText(target.username.toUpperCase(), 350, 625);
 
     ctx.fillStyle = '#444';
-    ctx.font = '26px Georgia';
-    ctx.fillText(role.toUpperCase(), 350, 740);
+    ctx.font = '24px Georgia';
+    ctx.fillText(role.toUpperCase(), 350, 675);
 
     ctx.fillStyle = '#333';
     ctx.font = '16px Georgia';
-    ctx.fillText(`BADGE ID: ${badgeId}`, 350, 830);
+    ctx.fillText(`BADGE ID: ${badgeId}`, 350, 760);
 
     ctx.fillStyle = '#666';
     ctx.font = '15px Georgia';
-    ctx.fillText(`Issued: ${new Date().toLocaleDateString('en-US')}`, 350, 860);
+    ctx.fillText(`Issued: ${new Date().toLocaleDateString('en-US')}`, 350, 790);
 
     ctx.fillStyle = '#1a4a8a';
     ctx.font = 'bold 14px Georgia';
-    ctx.fillText('AUTHORIZED BY PERRY WHITE  •  EDITOR-IN-CHIEF', 350, 910);
+    ctx.fillText('AUTHORIZED BY PERRY WHITE  •  EDITOR-IN-CHIEF', 350, 850);
 
     const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
       name: 'press-badge.png'
@@ -393,7 +403,7 @@ client.on('interactionCreate', async interaction => {
       content: '❌ Failed to generate the press badge.'
     });
   }
-    }
+      }
   if (commandName === '8ball') {
     const question = interaction.options.getString('question');
 
