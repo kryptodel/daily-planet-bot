@@ -133,8 +133,10 @@ client.once('ready', async () => {
         client.on('interactionCreate', async interaction => {
 if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'quote') {
   const message = interaction.targetMessage;
-  const user = message.author;
-  let content = message.content || '*[sem texto]*';
+const user = message.author;
+const member = message.member;
+const displayName = member?.displayName || user.globalName || user.username;
+let content = message.content || '*[sem texto]*';
 
   if (content.length > 300) {
     content = content.slice(0, 297) + '...';
@@ -146,25 +148,20 @@ if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'qu
     const canvas = createCanvas(850, 480);
     const ctx = canvas.getContext('2d');
 
-    // Fundo
     ctx.fillStyle = '#0f172a';
     ctx.fillRect(0, 0, 850, 480);
 
-    // Painel principal
     ctx.fillStyle = '#1e293b';
     ctx.beginPath();
     ctx.roundRect(25, 25, 800, 430, 20);
     ctx.fill();
 
-    // Borda dourada sutil
     ctx.strokeStyle = '#d4af37';
     ctx.lineWidth = 3;
     ctx.stroke();
 
-    // ========== AVATAR ==========
     const avatar = await loadImage(user.displayAvatarURL({ extension: 'png', size: 256 }));
 
-    // Círculo do avatar
     ctx.save();
     ctx.beginPath();
     ctx.arc(130, 160, 70, 0, Math.PI * 2);
@@ -173,38 +170,31 @@ if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'qu
     ctx.drawImage(avatar, 60, 90, 140, 140);
     ctx.restore();
 
-    // Anel do avatar
     ctx.beginPath();
     ctx.arc(130, 160, 70, 0, Math.PI * 2);
     ctx.strokeStyle = '#d4af37';
     ctx.lineWidth = 5;
     ctx.stroke();
 
-    // Nome
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 26px Georgia';
     ctx.textAlign = 'left';
-    ctx.fillText(user.username, 230, 145);
+    ctx.fillText(displayName, 230, 145);
 
-    // Data
     ctx.fillStyle = '#94a3b8';
     ctx.font = '16px Georgia';
     ctx.fillText(new Date(message.createdTimestamp).toLocaleString('pt-BR'), 230, 175);
 
-    // ========== BALÃO ==========
-    // Sombra do balão
     ctx.fillStyle = 'rgba(0,0,0,0.25)';
     ctx.beginPath();
     ctx.roundRect(60, 250, 730, 170, 18);
     ctx.fill();
 
-    // Balão
     ctx.fillStyle = '#f8fafc';
     ctx.beginPath();
     ctx.roundRect(55, 245, 730, 170, 18);
     ctx.fill();
 
-    // Ponteiro do balão
     ctx.beginPath();
     ctx.moveTo(130, 245);
     ctx.lineTo(110, 215);
@@ -212,43 +202,57 @@ if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'qu
     ctx.closePath();
     ctx.fill();
 
-    // ========== TEXTO ==========
-    ctx.fillStyle = '#0f172a';
-    ctx.textAlign = 'left';
+ctx.fillStyle = '#0f172a';
+ctx.textAlign = 'left';
 
-    let fontSize = 22;
-    const maxWidth = 680;
-    const maxLines = 5;
+let fontSize = 24;
 
-    while (fontSize >= 16) {
-      ctx.font = `${fontSize}px Georgia`;
-      const words = content.split(' ');
-      let lines = [];
-      let current = '';
+const maxWidth = 660;
+const maxHeight = 130;
 
-      for (const word of words) {
-        const test = current + word + ' ';
-        if (ctx.measureText(test).width > maxWidth) {
-          lines.push(current.trim());
-          current = word + ' ';
+function wrapText(text, size) {
+    ctx.font = `${size}px Georgia`;
+
+    const words = text.split(/\s+/);
+    const lines = [];
+    let line = '';
+
+    for (const word of words) {
+        const test = line ? `${line} ${word}` : word;
+
+        if (ctx.measureText(test).width <= maxWidth) {
+            line = test;
         } else {
-          current = test;
+            if (line) lines.push(line);
+            line = word;
         }
-      }
-      if (current) lines.push(current.trim());
-
-      if (lines.length <= maxLines) {
-        let y = 285;
-        for (const line of lines) {
-          ctx.fillText(line, 80, y);
-          y += fontSize + 10;
-        }
-        break;
-      }
-      fontSize -= 1;
     }
 
-    // Rodapé
+    if (line) lines.push(line);
+
+    return lines;
+}
+
+let lines = wrapText(content, fontSize);
+
+while (
+    (lines.length * (fontSize + 8)) > maxHeight &&
+    fontSize > 14
+) {
+    fontSize--;
+    lines = wrapText(content, fontSize);
+}
+
+ctx.font = `${fontSize}px Georgia`;
+
+const lineHeight = fontSize + 8;
+let y = 280;
+
+for (const line of lines) {
+    ctx.fillText(line, 80, y);
+    y += lineHeight;
+}
+
     ctx.fillStyle = '#d4af37';
     ctx.font = 'bold 14px Georgia';
     ctx.textAlign = 'right';
