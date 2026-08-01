@@ -131,14 +131,15 @@ client.once('ready', async () => {
 
     
         client.on('interactionCreate', async interaction => {
-if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'quote') {
+
+    if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'quote') {
   const message = interaction.targetMessage;
   const user = message.author;
   const displayName = message.member?.displayName || user.username;
   let content = message.content || '(sem texto)';
 
-  if (content.length > 320) {
-    content = content.slice(0, 317) + '...';
+  if (content.length > 350) {
+    content = content.slice(0, 347) + '...';
   }
 
   await interaction.deferReply();
@@ -147,113 +148,111 @@ if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'qu
     const canvas = createCanvas(800, 700);
     const ctx = canvas.getContext('2d');
 
+    // Fundo de papel
     try {
       const paper = await loadImage('paper.jpg');
       ctx.drawImage(paper, 0, 0, 800, 700);
     } catch {
-
-      ctx.fillStyle = '#f5f0e6';
+      ctx.fillStyle = '#f4efe6';
       ctx.fillRect(0, 0, 800, 700);
 
-      ctx.strokeStyle = '#c9d6e5';
-      ctx.lineWidth = 1.5;
-      for (let y = 90; y < 700; y += 32) {
+      ctx.strokeStyle = '#c5d4e8';
+      ctx.lineWidth = 1.4;
+      for (let y = 100; y < 700; y += 34) {
         ctx.beginPath();
-        ctx.moveTo(40, y);
-        ctx.lineTo(760, y);
+        ctx.moveTo(50, y);
+        ctx.lineTo(750, y);
         ctx.stroke();
       }
-      
-      ctx.strokeStyle = '#e8a0a0';
+
+      ctx.strokeStyle = '#e6a3a3';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(90, 0);
-      ctx.lineTo(90, 700);
+      ctx.moveTo(100, 0);
+      ctx.lineTo(100, 700);
       ctx.stroke();
     }
 
+    // ========== AVATAR REDONDO LIMPO ==========
     const avatar = await loadImage(user.displayAvatarURL({ extension: 'png', size: 256 }));
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(160, 160, 75, 0, Math.PI * 2);
+    ctx.arc(160, 155, 68, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
-    ctx.drawImage(avatar, 85, 85, 150, 150);
+    ctx.drawImage(avatar, 92, 87, 136, 136);
     ctx.restore();
 
-    const imgData = ctx.getImageData(85, 85, 150, 150);
-    const data = imgData.data;
-    for (let i = 0; i < data.length; i += 4) {
-      const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-      data[i] = avg + 20;
-      data[i + 1] = avg + 10;
-      data[i + 2] = avg - 10;
-    }
-    ctx.putImageData(imgData, 85, 85);
-
+    // contorno suave
     ctx.beginPath();
-    ctx.arc(160, 160, 75, 0, Math.PI * 2);
-    ctx.strokeStyle = '#5a4a3a';
-    ctx.lineWidth = 3;
+    ctx.arc(160, 155, 68, 0, Math.PI * 2);
+    ctx.strokeStyle = '#5c4a3a';
+    ctx.lineWidth = 3.5;
     ctx.stroke();
 
+    // ========== NOME (só o apelido do servidor) ==========
     ctx.fillStyle = '#3d2b1f';
-    ctx.font = 'bold 22px Georgia';
+    ctx.font = 'bold 26px Georgia';
     ctx.textAlign = 'left';
-    ctx.fillText(user.username, 260, 145);
+    ctx.fillText(displayName, 250, 150);
 
-    ctx.fillStyle = '#6b5b4b';
-    ctx.font = '18px Georgia';
-    ctx.fillText(displayName, 260, 175);
+    ctx.fillStyle = '#7a6a5a';
+    ctx.font = '16px Georgia';
+    ctx.fillText('Daily Planet Quote', 250, 178);
 
-    ctx.fillStyle = '#4a3728';
+    // ========== TEXTO ==========
+    ctx.fillStyle = '#3d2b1f';
     ctx.textAlign = 'left';
 
-    let fontSize = 23;
-    const maxWidth = 620;
-    const startY = 280;
-    const maxY = 620;
+    const leftMargin = 110;
+    const maxWidth = 580;
+    let fontSize = 22;
+    const startY = 270;
 
-    while (fontSize >= 16) {
+    while (fontSize >= 15) {
       ctx.font = `${fontSize}px Georgia`;
+      const lineHeight = fontSize + 14;
+
       const words = content.split(' ');
       let lines = [];
-      let current = '';
+      let currentLine = '';
 
       for (const word of words) {
-        const test = current + word + ' ';
-        if (ctx.measureText(test).width > maxWidth) {
-          lines.push(current.trim());
-          current = word + ' ';
+        const testLine = currentLine + word + ' ';
+        if (ctx.measureText(testLine).width > maxWidth) {
+          if (currentLine) lines.push(currentLine.trim());
+          currentLine = word + ' ';
         } else {
-          current = test;
+          currentLine = testLine;
         }
       }
-      if (current) lines.push(current.trim());
+      if (currentLine) lines.push(currentLine.trim());
 
-      const totalHeight = lines.length * (fontSize + 12);
-      if (startY + totalHeight < maxY) {
+      // se couber, desenha
+      if (lines.length * lineHeight < 380) {
         let y = startY;
         for (const line of lines) {
-          ctx.fillText(line, 110, y);
-          y += fontSize + 12;
+          ctx.fillText(line, leftMargin, y);
+          y += lineHeight;
         }
         break;
       }
+
       fontSize -= 1;
     }
 
-    ctx.strokeStyle = '#5a4a3a';
-    ctx.fillStyle = '#5a4a3a';
-    ctx.lineWidth = 2;
+    // ========== DESENHOS SIMPLES ==========
+    ctx.strokeStyle = '#5c4a3a';
+    ctx.lineWidth = 1.8;
 
-    function drawStar(x, y, size) {
+    // estrelas
+    function star(x, y, r) {
       ctx.beginPath();
       for (let i = 0; i < 5; i++) {
-        const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
-        const px = x + size * Math.cos(angle);
-        const py = y + size * Math.sin(angle);
+        const a = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+        const px = x + r * Math.cos(a);
+        const py = y + r * Math.sin(a);
         if (i === 0) ctx.moveTo(px, py);
         else ctx.lineTo(px, py);
       }
@@ -261,46 +260,37 @@ if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'qu
       ctx.stroke();
     }
 
-    drawStar(720, 80, 14);
-    drawStar(750, 120, 10);
-    drawStar(690, 130, 8);
+    star(720, 90, 11);
+    star(750, 130, 8);
+    star(695, 140, 7);
 
+    // coração
     ctx.beginPath();
     ctx.moveTo(730, 200);
-    ctx.bezierCurveTo(730, 190, 750, 190, 750, 200);
-    ctx.bezierCurveTo(750, 215, 730, 230, 730, 240);
-    ctx.bezierCurveTo(730, 230, 710, 215, 710, 200);
-    ctx.bezierCurveTo(710, 190, 730, 190, 730, 200);
+    ctx.bezierCurveTo(730, 188, 752, 188, 752, 200);
+    ctx.bezierCurveTo(752, 218, 730, 235, 730, 248);
+    ctx.bezierCurveTo(730, 235, 708, 218, 708, 200);
+    ctx.bezierCurveTo(708, 188, 730, 188, 730, 200);
     ctx.stroke();
 
-    ctx.beginPath();
-    ctx.arc(700, 320, 12, 0, Math.PI * 2);
-    ctx.arc(715, 315, 14, 0, Math.PI * 2);
-    ctx.arc(730, 320, 12, 0, Math.PI * 2);
-    ctx.stroke();
-
+    // rodapé
     ctx.fillStyle = '#8a7a6a';
-    ctx.font = '14px Georgia';
+    ctx.font = '13px Georgia';
     ctx.textAlign = 'right';
-    ctx.fillText('Daily Planet  •  Quote', 760, 670);
+    ctx.fillText('Daily Planet  •  Quote', 760, 675);
 
     const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
       name: 'quote.png'
     });
 
-    await interaction.editReply({
-      files: [attachment]
-    });
+    await interaction.editReply({ files: [attachment] });
 
   } catch (error) {
     console.error('Error generating quote:', error);
-    await interaction.editReply({
-      content: '❌ Failed to generate the quote.'
-    });
+    await interaction.editReply({ content: '❌ Failed to generate the quote.' });
   }
   return;
-}
-
+    }
     
               
   if (!interaction.isChatInputCommand()) return;
