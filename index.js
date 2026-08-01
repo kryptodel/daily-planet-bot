@@ -136,7 +136,7 @@ if (
       
 if (
   interaction.isMessageContextMenuCommand?.() &&
-  interaction.commandName === 'quote'
+  interaction.commandName === 'quote'{
 )
   const message = interaction.targetMessage;
   const user = message.author;
