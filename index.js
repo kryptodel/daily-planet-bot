@@ -234,7 +234,7 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ content: '@here', embeds: [embed] });
   }
 
-    if (commandName === 'reporter') {
+if (commandName === 'reporter') {
   const target = interaction.options.getUser('user');
 
   const roles = [
@@ -256,131 +256,138 @@ client.on('interactionCreate', async interaction => {
   await interaction.deferReply();
 
   try {
-    const canvas = createCanvas(700, 1000);
+    const canvas = createCanvas(600, 900);
     const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = '#f8f6f1';
-    ctx.fillRect(0, 0, 700, 1000);
+    ctx.fillStyle = '#0f1c2e';
+    ctx.fillRect(0, 0, 600, 900);
 
-    ctx.strokeStyle = '#1a1a1a';
-    ctx.lineWidth = 8;
-    ctx.strokeRect(20, 20, 660, 960);
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 12;
+    ctx.strokeRect(15, 15, 570, 870);
 
-    ctx.strokeStyle = '#444';
+    ctx.strokeStyle = '#f0e6c8';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(30, 30, 540, 840);
+
+    // Furo mais realista
+    ctx.beginPath();
+    ctx.arc(300, 68, 26, 0, Math.PI * 2);
+    ctx.fillStyle = '#0a1220';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(300, 68, 26, 0, Math.PI * 2);
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(300, 68, 18, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a2a40';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(300, 68, 18, 0, Math.PI * 2);
+    ctx.strokeStyle = '#b8962e';
     ctx.lineWidth = 2;
-    ctx.strokeRect(35, 35, 630, 930);
-
-    ctx.beginPath();
-    ctx.arc(350, 75, 18, 0, Math.PI * 2);
-    ctx.fillStyle = '#f8f6f1';
-    ctx.fill();
-    ctx.strokeStyle = '#222';
-    ctx.lineWidth = 4;
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(350, 75, 10, 0, Math.PI * 2);
-    ctx.fillStyle = '#ddd';
+    ctx.arc(300, 68, 9, 0, Math.PI * 2);
+    ctx.fillStyle = '#0a1220';
     ctx.fill();
 
-    ctx.fillStyle = '#111';
-    ctx.font = 'bold 46px Georgia';
+    // Título
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 28px Georgia';
     ctx.textAlign = 'center';
-    ctx.fillText('Daily', 220, 155);
+    ctx.fillText('DAILY PLANET', 300, 130);
 
-    try {
-      const logo = await loadImage('Logo.png');
-      ctx.drawImage(logo, 310, 105, 80, 80);
-    } catch (e) {
-      ctx.beginPath();
-      ctx.arc(350, 140, 32, 0, Math.PI * 2);
-      ctx.fillStyle = '#1a4a8a';
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 14px Arial';
-      ctx.fillText('DP', 350, 146);
-    }
-
-    ctx.fillStyle = '#111';
-    ctx.font = 'bold 46px Georgia';
-    ctx.fillText('Planet', 490, 155);
-
-    ctx.fillStyle = '#555';
-    ctx.font = '14px Georgia';
-    ctx.fillText("METROPOLIS' GREATEST NEWSPAPER", 350, 200);
+    ctx.fillStyle = '#a0b4c8';
+    ctx.font = '15px Georgia';
+    ctx.fillText('METROPOLIS  •  PRESS CREDENTIAL', 300, 155);
 
     ctx.beginPath();
-    ctx.moveTo(80, 225);
-    ctx.lineTo(620, 225);
-    ctx.strokeStyle = '#222';
-    ctx.lineWidth = 1.5;
+    ctx.moveTo(80, 175);
+    ctx.lineTo(520, 175);
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 2;
     ctx.stroke();
 
-    const photoSize = 260;
-    const photoX = 80;
-    const photoY = 260;
+    // Foto
+    ctx.fillStyle = '#1a2a40';
+    ctx.fillRect(175, 200, 250, 250);
 
-    ctx.fillStyle = '#222';
-    ctx.fillRect(photoX - 8, photoY - 8, photoSize + 16, photoSize + 16);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(photoX - 3, photoY - 3, photoSize + 6, photoSize + 6);
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 5;
+    ctx.strokeRect(175, 200, 250, 250);
 
     const avatar = await loadImage(
       target.displayAvatarURL({ extension: 'png', size: 512 })
     );
-    ctx.drawImage(avatar, photoX, photoY, photoSize, photoSize);
+    ctx.drawImage(avatar, 185, 210, 230, 230);
 
-    ctx.save();
-    ctx.translate(520, 400);
-    ctx.rotate(-0.25);
+    ctx.fillStyle = 'rgba(15, 28, 46, 0.15)';
+    ctx.fillRect(185, 210, 230, 230);
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-    ctx.font = 'bold 78px Georgia';
-    ctx.textAlign = 'center';
-    ctx.fillText('PRESS', 4, 4);
+    // Nome
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px Georgia';
+    ctx.fillText(target.username.toUpperCase(), 300, 500);
 
-    ctx.fillStyle = 'rgba(90, 90, 90, 0.75)';
-    ctx.fillText('PRESS', 0, 0);
+    // Cargo
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 20px Georgia';
+    ctx.fillText(role.toUpperCase(), 300, 540);
 
-    ctx.strokeStyle = 'rgba(60, 60, 60, 0.6)';
-    ctx.lineWidth = 2;
-    ctx.strokeText('PRESS', 0, 0);
+    ctx.beginPath();
+    ctx.moveTo(120, 570);
+    ctx.lineTo(480, 570);
+    ctx.strokeStyle = '#3a5068';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
 
-    ctx.restore();
-
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(70, 560, 560, 150);
-    ctx.strokeStyle = '#222';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(70, 560, 560, 150);
-
-    ctx.fillStyle = '#111';
-    ctx.font = 'bold 40px Georgia';
-    ctx.textAlign = 'center';
-    ctx.fillText(target.username.toUpperCase(), 350, 625);
-
-    ctx.fillStyle = '#444';
-    ctx.font = '24px Georgia';
-    ctx.fillText(role.toUpperCase(), 350, 675);
-
-    ctx.fillStyle = '#333';
+    // Badge ID
+    ctx.fillStyle = '#a0b4c8';
     ctx.font = '16px Georgia';
-    ctx.fillText(`BADGE ID: ${badgeId}`, 350, 760);
+    ctx.fillText('BADGE ID', 300, 610);
 
-    ctx.fillStyle = '#666';
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 26px Courier New';
+    ctx.fillText(badgeId, 300, 650);
+
+    // Data
+    ctx.fillStyle = '#a0b4c8';
     ctx.font = '15px Georgia';
-    ctx.fillText(`Issued: ${new Date().toLocaleDateString('en-US')}`, 350, 790);
+    ctx.fillText('ISSUED', 300, 700);
 
-    ctx.fillStyle = '#1a4a8a';
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '18px Georgia';
+    ctx.fillText(new Date().toLocaleDateString('en-US'), 300, 730);
+
+    // Rodapé
+    ctx.beginPath();
+    ctx.moveTo(80, 780);
+    ctx.lineTo(520, 780);
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#a0b4c8';
+    ctx.font = '13px Georgia';
+    ctx.fillText('Authorized by Perry White  •  Editor-in-Chief', 300, 820);
+
+    ctx.fillStyle = '#d4af37';
     ctx.font = 'bold 14px Georgia';
-    ctx.fillText('AUTHORIZED BY PERRY WHITE  •  EDITOR-IN-CHIEF', 350, 850);
+    ctx.fillText('THE MOST TRUSTED NEWSPAPER IN METROPOLIS', 300, 855);
 
     const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
       name: 'press-badge.png'
     });
 
     const embed = new EmbedBuilder()
-      .setColor(0x1a4a8a)
+      .setColor(0x0f1c2e)
       .setTitle('📋 Press Badge Issued')
       .setDescription(
         `**${target}** has been officially hired by the **Daily Planet**!\n\n` +
