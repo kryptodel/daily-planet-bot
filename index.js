@@ -45,6 +45,11 @@ client.once('ready', async () => {
       .addStringOption(opt => opt.setName('title').setDescription('Headline title').setRequired(true))
       .addStringOption(opt => opt.setName('content').setDescription('Article content').setRequired(true)),
 
+   new SlashCommandBuilder()
+      .setName('quote')
+      .setDescription('Create a comic-style quote from a message')
+      .setType(3),
+
     new SlashCommandBuilder()
       .setName('ship')
       .setDescription('Calculate the compatibility between two people')
@@ -202,6 +207,126 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [embed], components: [row] });
   }
 
+  if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'Quote') {
+  const message = interaction.targetMessage;
+  const user = message.author;
+  const content = message.content || '*[sem texto]*';
+
+  await interaction.deferReply();
+
+  try {
+    const canvas = createCanvas(800, 500);
+    const ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fillRect(0, 0, 800, 500);
+
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 12;
+    ctx.strokeRect(15, 15, 770, 470);
+
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(30, 30, 740, 440);
+
+    ctx.fillStyle = '#f5f5f5';
+    ctx.beginPath();
+    ctx.roundRect(60, 80, 680, 280, 20);
+    ctx.fill();
+
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(140, 360);
+    ctx.lineTo(110, 420);
+    ctx.lineTo(180, 360);
+    ctx.closePath();
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fill();
+    ctx.stroke();
+
+    const avatar = await loadImage(user.displayAvatarURL({ extension: 'png', size: 256 }));
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(120, 430, 45, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(avatar, 75, 385, 90, 90);
+    ctx.restore();
+
+    ctx.beginPath();
+    ctx.arc(120, 430, 45, 0, Math.PI * 2);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 26px Georgia';
+    ctx.textAlign = 'left';
+    ctx.fillText(user.username, 185, 425);
+
+    ctx.fillStyle = '#aaaaaa';
+    ctx.font = '16px Georgia';
+    ctx.fillText(new Date(message.createdTimestamp).toLocaleString('pt-BR'), 185, 450);
+)
+    ctx.fillStyle = '#111';
+    ctx.font = '22px Georgia';
+    ctx.textAlign = 'left';
+
+    const maxWidth = 620;
+    const lineHeight = 32;
+    const words = content.split(' ');
+    let line = '';
+    let y = 130;
+
+    for (let i = 0; i < words.length; i++) {
+      const testLine = line + words[i] + ' ';
+      const metrics = ctx.measureText(testLine);
+
+      if (metrics.width > maxWidth && i > 0) {
+        ctx.fillText(line, 90, y);
+        line = words[i] + ' ';
+        y += lineHeight;
+
+        if (y > 320) {
+          ctx.fillText('...', 90, y);
+          break;
+        }
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, 90, y);
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(15, 15, 40, 8);
+    ctx.fillRect(15, 15, 8, 40);
+    ctx.fillRect(745, 15, 40, 8);
+    ctx.fillRect(777, 15, 8, 40);
+    ctx.fillRect(15, 477, 40, 8);
+    ctx.fillRect(15, 445, 8, 40);
+    ctx.fillRect(745, 477, 40, 8);
+    ctx.fillRect(777, 445, 8, 40);
+
+    const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
+      name: 'quote.png'
+    });
+
+    await interaction.editReply({
+      files: [attachment]
+    });
+
+  } catch (error) {
+    console.error('Error generating quote:', error);
+    await interaction.editReply({
+      content: '❌ Failed to generate the quote.'
+    });
+  }
+  }
+
   if (commandName === 'news') {
     const title = interaction.options.getString('title');
     const content = interaction.options.getString('content');
@@ -270,7 +395,6 @@ if (commandName === 'reporter') {
     ctx.lineWidth = 3;
     ctx.strokeRect(30, 30, 540, 840);
 
-    // Furo mais realista
     ctx.beginPath();
     ctx.arc(300, 68, 26, 0, Math.PI * 2);
     ctx.fillStyle = '#0a1220';
@@ -298,7 +422,6 @@ if (commandName === 'reporter') {
     ctx.fillStyle = '#0a1220';
     ctx.fill();
 
-    // Título
     ctx.fillStyle = '#d4af37';
     ctx.font = 'bold 28px Georgia';
     ctx.textAlign = 'center';
@@ -315,7 +438,6 @@ if (commandName === 'reporter') {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Foto
     ctx.fillStyle = '#1a2a40';
     ctx.fillRect(175, 200, 250, 250);
 
@@ -331,12 +453,10 @@ if (commandName === 'reporter') {
     ctx.fillStyle = 'rgba(15, 28, 46, 0.15)';
     ctx.fillRect(185, 210, 230, 230);
 
-    // Nome
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 32px Georgia';
     ctx.fillText(target.username.toUpperCase(), 300, 500);
 
-    // Cargo
     ctx.fillStyle = '#d4af37';
     ctx.font = 'bold 20px Georgia';
     ctx.fillText(role.toUpperCase(), 300, 540);
@@ -348,7 +468,6 @@ if (commandName === 'reporter') {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Badge ID
     ctx.fillStyle = '#a0b4c8';
     ctx.font = '16px Georgia';
     ctx.fillText('BADGE ID', 300, 610);
@@ -357,7 +476,6 @@ if (commandName === 'reporter') {
     ctx.font = 'bold 26px Courier New';
     ctx.fillText(badgeId, 300, 650);
 
-    // Data
     ctx.fillStyle = '#a0b4c8';
     ctx.font = '15px Georgia';
     ctx.fillText('ISSUED', 300, 700);
@@ -366,7 +484,6 @@ if (commandName === 'reporter') {
     ctx.font = '18px Georgia';
     ctx.fillText(new Date().toLocaleDateString('en-US'), 300, 730);
 
-    // Rodapé
     ctx.beginPath();
     ctx.moveTo(80, 780);
     ctx.lineTo(520, 780);
