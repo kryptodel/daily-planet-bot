@@ -131,158 +131,439 @@ client.once('ready', async () => {
 
     
         client.on('interactionCreate', async interaction => {
-  
-        
-              if (
+  if (
   interaction.isMessageContextMenuCommand() &&
-  interaction.commandName === 'quote'
+  interaction.commandName === "quote"
 ) {
   const message = interaction.targetMessage;
   const user = message.author;
-  let content = message.content || '*[sem texto]*';
 
-  if (content.length > 300) {
-    content = content.slice(0, 297) + '...';
+  let content = message.content?.trim();
+
+  if (!content && message.attachments.size > 0) {
+    content = "📷 Image";
+  }
+
+  if (!content) {
+    content = "*No text*";
   }
 
   await interaction.deferReply();
 
   try {
-    const canvas = createCanvas(850, 480);
-    const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(0, 0, 850, 480);
+    const COLORS = [
+      {
+        bg: "#FFE66D",
+        panel: "#FF3B30",
+        accent: "#00C2FF"
+      },
+      {
+        bg: "#8EE3FF",
+        panel: "#FFCC00",
+        accent: "#FF3B30"
+      },
+      {
+        bg: "#FFD6E8",
+        panel: "#6C5CE7",
+        accent: "#FFCC00"
+      },
+      {
+        bg: "#D7FFD9",
+        panel: "#009966",
+        accent: "#FF4444"
+      }
+    ];
 
-    ctx.fillStyle = '#1e293b';
-    ctx.beginPath();
-    ctx.roundRect(25, 25, 800, 430, 20);
-    ctx.fill();
+    const palette =
+      COLORS[Math.floor(Math.random() * COLORS.length)];
 
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 3;
-    ctx.stroke();
+    const canvas = createCanvas(1100, 700);
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let y = 15; y < canvas.height; y += 18) {
+      for (let x = 15; x < canvas.width; x += 18) {
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0,0,0,.08)";
+        ctx.fill();
+      }
+    }
+
+    ctx.fillStyle = palette.panel;
+    ctx.fillRect(0, 0, canvas.width, 85);
+
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 85, canvas.width, 8);
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 40px Impact";
+    ctx.textAlign = "center";
+    ctx.fillText(
+      "DAILY PLANET • COMIC QUOTE",
+      canvas.width / 2,
+      55
+    );
+
+    ctx.fillStyle = palette.accent;
+    ctx.fillRect(45, 120, 270, 520);
+
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 8;
+    ctx.strokeRect(45, 120, 270, 520);
 
     const avatar = await loadImage(
       user.displayAvatarURL({
-        extension: 'png',
-        size: 256
+        extension: "png",
+        size: 512
       })
     );
 
     ctx.save();
+
     ctx.beginPath();
-    ctx.arc(130, 160, 70, 0, Math.PI * 2);
+    ctx.arc(180, 250, 90, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
-    ctx.drawImage(avatar, 60, 90, 140, 140);
+
+    ctx.drawImage(avatar, 90, 160, 180, 180);
+
     ctx.restore();
 
     ctx.beginPath();
-    ctx.arc(130, 160, 70, 0, Math.PI * 2);
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 5;
+    ctx.arc(180, 250, 92, 0, Math.PI * 2);
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = "#000";
     ctx.stroke();
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 26px Georgia';
-    ctx.textAlign = 'left';
-    ctx.fillText(user.username, 230, 145);
+    ctx.beginPath();
+    ctx.arc(180, 250, 100, 0, Math.PI * 2);
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = "#fff";
+    ctx.stroke();
 
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '16px Georgia';
+    ctx.fillStyle = "#000";
+    ctx.fillRect(60, 390, 240, 85);
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 28px Impact";
+    ctx.textAlign = "center";
+
+    let username = user.username.toUpperCase();
+
+    if (username.length > 16) {
+      username = username.slice(0, 13) + "...";
+    }
+
+    ctx.fillText(username, 180, 435);
+
+    ctx.font = "20px Arial";
     ctx.fillText(
-      new Date(message.createdTimestamp).toLocaleString('pt-BR'),
-      230,
-      175
+      new Date(message.createdTimestamp).toLocaleDateString(),
+      180,
+      465
     );
 
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillStyle = "#FFFFFF";
     ctx.beginPath();
-    ctx.roundRect(60, 250, 730, 170, 18);
+    ctx.roundRect(355, 125, 700, 470, 30);
     ctx.fill();
 
-    ctx.fillStyle = '#f8fafc';
-    ctx.beginPath();
-    ctx.roundRect(55, 245, 730, 170, 18);
-    ctx.fill();
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 8;
+    ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(130, 245);
-    ctx.lineTo(110, 215);
-    ctx.lineTo(160, 245);
+    ctx.moveTo(355, 280);
+    ctx.lineTo(300, 320);
+    ctx.lineTo(355, 340);
     ctx.closePath();
+
+    ctx.fillStyle = "#FFFFFF";
     ctx.fill();
 
-    ctx.fillStyle = '#0f172a';
-    ctx.textAlign = 'left';
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 8;
+    ctx.stroke();
 
-    let fontSize = 22;
-    const maxWidth = 680;
-    const maxLines = 5;
+    ctx.fillStyle = "rgba(0,0,0,.08)";
+    ctx.font = "180px Impact";
+    ctx.textAlign = "left";
 
-    while (fontSize >= 16) {
-      ctx.font = `${fontSize}px Georgia`;
+    ctx.fillText("“", 395, 255);
 
-      const words = content.split(' ');
+    ctx.fillStyle = "#111";
+        const bubbleX = 410;
+    const bubbleY = 170;
+    const bubbleWidth = 590;
+    const bubbleHeight = 340;
+
+    let fontSize = 34;
+    const minFont = 18;
+    const padding = 35;
+
+    function wrapText(text, size) {
+      ctx.font = `bold ${size}px Arial`;
+
+      const words = text.split(/\s+/);
       const lines = [];
-      let current = '';
+      let current = "";
 
       for (const word of words) {
-        const test = current + word + ' ';
 
-        if (ctx.measureText(test).width > maxWidth) {
-          lines.push(current.trim());
-          current = word + ' ';
-        } else {
-          current = test;
+        if (ctx.measureText(word).width > bubbleWidth - padding * 2) {
+
+          let piece = "";
+
+          for (const letter of word) {
+
+            if (
+              ctx.measureText(piece + letter).width >
+              bubbleWidth - padding * 2
+            ) {
+
+              if (piece.length) {
+                lines.push(piece);
+              }
+
+              piece = letter;
+
+            } else {
+
+              piece += letter;
+
+            }
+
+          }
+
+          if (piece.length) {
+            current = piece + " ";
+          }
+
+          continue;
         }
+
+        const test = current + word + " ";
+
+        if (
+          ctx.measureText(test).width >
+          bubbleWidth - padding * 2
+        ) {
+
+          lines.push(current.trim());
+          current = word + " ";
+
+        } else {
+
+          current = test;
+
+        }
+
       }
 
-      if (current) {
+      if (current.trim()) {
         lines.push(current.trim());
       }
 
-      if (lines.length <= maxLines) {
-        let y = 285;
+      return lines;
+    }
 
-        for (const line of lines) {
-          ctx.fillText(line, 80, y);
-          y += fontSize + 10;
-        }
+    let lines = [];
 
+    while (fontSize >= minFont) {
+
+      lines = wrapText(content, fontSize);
+
+      const lineHeight = fontSize + 12;
+
+      if (
+        lines.length * lineHeight <= bubbleHeight - padding * 2
+      ) {
         break;
       }
 
       fontSize--;
+
     }
 
-    ctx.fillStyle = '#d4af37';
-    ctx.font = 'bold 14px Georgia';
-    ctx.textAlign = 'right';
-    ctx.fillText('DAILY PLANET  •  QUOTE', 780, 440);
+    ctx.font = `bold ${fontSize}px Arial`;
+
+    const lineHeight = fontSize + 12;
+
+    const maxVisibleLines = Math.floor(
+      (bubbleHeight - padding * 2) / lineHeight
+    );
+
+    if (lines.length > maxVisibleLines) {
+
+      lines = lines.slice(0, maxVisibleLines);
+
+      let last = lines[maxVisibleLines - 1];
+
+      while (
+        ctx.measureText(last + "...").width >
+        bubbleWidth - padding * 2
+      ) {
+
+        last = last.slice(0, -1);
+
+      }
+
+      lines[maxVisibleLines - 1] = last + "...";
+
+    }
+
+    const totalHeight = lines.length * lineHeight;
+
+    let y =
+      bubbleY +
+      (bubbleHeight - totalHeight) / 2 +
+      fontSize;
+
+    ctx.fillStyle = "#111";
+    ctx.textAlign = "left";
+
+    for (const line of lines) {
+
+      ctx.fillText(
+        line,
+        bubbleX + padding,
+        y
+      );
+
+      y += lineHeight;
+
+    }
+        ctx.fillStyle = "#000";
+    ctx.font = "bold 46px Impact";
+    ctx.textAlign = "right";
+    ctx.fillText("”", 980, 520);
+
+    function starburst(cx, cy, spikes, outerRadius, innerRadius, color) {
+      let rot = Math.PI / 2 * 3;
+      const step = Math.PI / spikes;
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - outerRadius);
+
+      for (let i = 0; i < spikes; i++) {
+
+        let x = cx + Math.cos(rot) * outerRadius;
+        let y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y);
+
+        rot += step;
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y);
+
+        rot += step;
+      }
+
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+    }
+
+    starburst(1010, 90, 14, 55, 28, "#FFD500");
+
+    ctx.fillStyle = "#000";
+    ctx.font = "bold 22px Impact";
+    ctx.textAlign = "center";
+    ctx.fillText("QUOTE!", 1010, 97);
+
+    starburst(80, 90, 12, 40, 20, "#00D4FF");
+
+    ctx.fillStyle = "#000";
+    ctx.font = "bold 18px Impact";
+    ctx.fillText("WOW!", 80, 95);
+
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 640, canvas.width, 60);
+
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 26px Impact";
+    ctx.textAlign = "center";
+    ctx.fillText(
+      "DAILY PLANET • THE MOST TRUSTED NEWSPAPER IN METROPOLIS",
+      canvas.width / 2,
+      678
+    );
+
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 5;
+
+    const corners = [
+      [45, 120],
+      [1045, 120],
+      [45, 595],
+      [1045, 595]
+    ];
+
+    for (const [x, y] of corners) {
+      ctx.beginPath();
+      ctx.moveTo(x, y + 20);
+      ctx.lineTo(x, y);
+      ctx.lineTo(x + 20, y);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "rgba(255,255,255,.25)";
+    ctx.fillRect(55, 130, 250, 8);
+
+    ctx.fillStyle = "rgba(255,255,255,.15)";
+    ctx.fillRect(365, 135, 680, 6);
+
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+
+    for (let i = 0; i < 12; i++) {
+
+      const x = 360 + i * 58;
+
+      ctx.beginPath();
+      ctx.moveTo(x, 610);
+      ctx.lineTo(x + 30, 640);
+      ctx.stroke();
+
+    }
 
     const attachment = new AttachmentBuilder(
-      canvas.toBuffer('image/png'),
+      canvas.toBuffer("image/png"),
       {
-        name: 'quote.png'
+        name: "quote.png"
       }
     );
 
     await interaction.editReply({
       files: [attachment]
     });
+
   } catch (error) {
-    console.error('Error generating quote:', error);
+
+    console.error(error);
 
     await interaction.editReply({
-      content: '❌ Failed to generate the quote.'
+      content: "❌ Failed to generate the quote."
     });
+
   }
 
   return;
-              }
+  }
+
     
+
+    
+              
   if (!interaction.isChatInputCommand()) return;
 
   const { commandName } = interaction;
