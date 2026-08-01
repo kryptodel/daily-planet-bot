@@ -319,7 +319,7 @@ client.once('ready', async () => {
 
       return;
     }
-  }
+  
     
   if (!interaction.isChatInputCommand()) return;
 
