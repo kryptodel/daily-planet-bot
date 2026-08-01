@@ -131,7 +131,7 @@ client.once('ready', async () => {
 
     
         client.on('interactionCreate', async interaction => {
-if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'Quote') {
+if (interaction.isMessageContextMenuCommand() && interaction.commandName === 'quote') {
   const message = interaction.targetMessage;
   const user = message.author;
   const displayName = message.member?.displayName || user.username;
