@@ -131,7 +131,137 @@ client.once('ready', async () => {
 
 client.on('interactionCreate', async interaction => {
       if (interaction.commandName === 'quote') {
-      // Vamos colocar o código do quote aqui no próximo passo.
+      if (interaction.commandName === 'quote') {
+  const message = interaction.targetMessage;
+  const user = message.author;
+  const content = message.content || '*[sem texto]*';
+
+  await interaction.deferReply();
+
+  try {
+    const canvas = createCanvas(800, 500);
+    const ctx = canvas.getContext('2d');
+
+    // Fundo do quadrinho
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Borda externa do painel
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 12;
+    ctx.strokeRect(15, 15, 770, 470);
+
+    // Borda interna
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(30, 30, 740, 440);
+
+    // Fundo do balão
+    ctx.fillStyle = '#f5f5f5';
+    ctx.beginPath();
+    ctx.roundRect(60, 80, 680, 280, 20);
+    ctx.fill();
+
+    // Contorno do balão
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    // Ponteiro do balão (triângulo)
+    ctx.beginPath();
+    ctx.moveTo(140, 360);
+    ctx.lineTo(110, 420);
+    ctx.lineTo(180, 360);
+    ctx.closePath();
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fill();
+    ctx.stroke();
+
+    // Avatar
+    const avatar = await loadImage(user.displayAvatarURL({ extension: 'png', size: 256 }));
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(120, 430, 45, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(avatar, 75, 385, 90, 90);
+    ctx.restore();
+
+    // Anel do avatar
+    ctx.beginPath();
+    ctx.arc(120, 430, 45, 0, Math.PI * 2);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // Nome do usuário
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 26px Georgia';
+    ctx.textAlign = 'left';
+    ctx.fillText(user.username, 185, 425);
+
+    // Data
+    ctx.fillStyle = '#aaaaaa';
+    ctx.font = '16px Georgia';
+    ctx.fillText(new Date(message.createdTimestamp).toLocaleString('pt-BR'), 185, 450);
+
+    // Texto da mensagem (quebra de linha)
+    ctx.fillStyle = '#111';
+    ctx.font = '22px Georgia';
+    ctx.textAlign = 'left';
+
+    const maxWidth = 620;
+    const lineHeight = 32;
+    const words = content.split(' ');
+    let line = '';
+    let y = 130;
+
+    for (let i = 0; i < words.length; i++) {
+      const testLine = line + words[i] + ' ';
+      const metrics = ctx.measureText(testLine);
+
+      if (metrics.width > maxWidth && i > 0) {
+        ctx.fillText(line, 90, y);
+        line = words[i] + ' ';
+        y += lineHeight;
+
+        if (y > 320) {
+          ctx.fillText('...', 90, y);
+          break;
+        }
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, 90, y);
+
+    // Efeito de quadrinho (cantos)
+    ctx.fillStyle = '#000';
+    ctx.fillRect(15, 15, 40, 8);
+    ctx.fillRect(15, 15, 8, 40);
+    ctx.fillRect(745, 15, 40, 8);
+    ctx.fillRect(777, 15, 8, 40);
+    ctx.fillRect(15, 477, 40, 8);
+    ctx.fillRect(15, 445, 8, 40);
+    ctx.fillRect(745, 477, 40, 8);
+    ctx.fillRect(777, 445, 8, 40);
+
+    const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
+      name: 'quote.png'
+    });
+
+    await interaction.editReply({
+      files: [attachment]
+    });
+
+  } catch (error) {
+    console.error('Error generating quote:', error);
+    await interaction.editReply({
+      content: '❌ Failed to generate the quote.'
+    });
+  }
+      }
     }
     return;
 }
