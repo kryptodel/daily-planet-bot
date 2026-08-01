@@ -130,6 +130,11 @@ client.once('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
+      if (interaction.commandName === 'quote') {
+      // Vamos colocar o código do quote aqui no próximo passo.
+    }
+    return;
+}
   if (!interaction.isChatInputCommand()) return;
 
   const { commandName } = interaction;
