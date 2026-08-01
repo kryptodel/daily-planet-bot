@@ -138,146 +138,119 @@ client.once('ready', async () => {
   const displayName = message.member?.displayName || user.username;
   let content = message.content || '(sem texto)';
 
-  if (content.length > 350) {
-    content = content.slice(0, 347) + '...';
-  }
+  if (content.length > 280) content = content.slice(0, 277) + '...';
 
   await interaction.deferReply();
 
   try {
-    const canvas = createCanvas(800, 700);
+    const canvas = createCanvas(800, 420);
     const ctx = canvas.getContext('2d');
 
-    // Fundo de papel
-    try {
-      const paper = await loadImage('paper.jpg');
-      ctx.drawImage(paper, 0, 0, 800, 700);
-    } catch {
-      ctx.fillStyle = '#f4efe6';
-      ctx.fillRect(0, 0, 800, 700);
+    // Fundo
+    const gradient = ctx.createLinearGradient(0, 0, 800, 420);
+    gradient.addColorStop(0, '#0f0c29');
+    gradient.addColorStop(0.5, '#302b63');
+    gradient.addColorStop(1, '#24243e');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 800, 420);
 
-      ctx.strokeStyle = '#c5d4e8';
-      ctx.lineWidth = 1.4;
-      for (let y = 100; y < 700; y += 34) {
-        ctx.beginPath();
-        ctx.moveTo(50, y);
-        ctx.lineTo(750, y);
-        ctx.stroke();
-      }
+    // Card principal
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.beginPath();
+    ctx.roundRect(30, 30, 740, 360, 24);
+    ctx.fill();
 
-      ctx.strokeStyle = '#e6a3a3';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(100, 0);
-      ctx.lineTo(100, 700);
-      ctx.stroke();
-    }
+    // Borda suave
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
 
-    // ========== AVATAR REDONDO LIMPO ==========
+    // ========== AVATAR ==========
     const avatar = await loadImage(user.displayAvatarURL({ extension: 'png', size: 256 }));
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(160, 155, 68, 0, Math.PI * 2);
+    ctx.arc(120, 130, 55, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
-    ctx.drawImage(avatar, 92, 87, 136, 136);
+    ctx.drawImage(avatar, 65, 75, 110, 110);
     ctx.restore();
 
-    // contorno suave
+    // Anel do avatar
     ctx.beginPath();
-    ctx.arc(160, 155, 68, 0, Math.PI * 2);
-    ctx.strokeStyle = '#5c4a3a';
-    ctx.lineWidth = 3.5;
+    ctx.arc(120, 130, 55, 0, Math.PI * 2);
+    ctx.strokeStyle = '#c9a227';
+    ctx.lineWidth = 3;
     ctx.stroke();
 
-    // ========== NOME (só o apelido do servidor) ==========
-    ctx.fillStyle = '#3d2b1f';
+    // Nome
+    ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 26px Georgia';
     ctx.textAlign = 'left';
-    ctx.fillText(displayName, 250, 150);
+    ctx.fillText(displayName, 200, 120);
 
-    ctx.fillStyle = '#7a6a5a';
-    ctx.font = '16px Georgia';
-    ctx.fillText('Daily Planet Quote', 250, 178);
+    // Subtítulo
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.font = '15px Georgia';
+    ctx.fillText('Daily Planet Quote', 200, 148);
+
+    // Linha decorativa
+    ctx.strokeStyle = 'rgba(201,162,39,0.4)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(200, 165);
+    ctx.lineTo(500, 165);
+    ctx.stroke();
 
     // ========== TEXTO ==========
-    ctx.fillStyle = '#3d2b1f';
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
     ctx.textAlign = 'left';
 
-    const leftMargin = 110;
-    const maxWidth = 580;
     let fontSize = 22;
-    const startY = 270;
+    const maxWidth = 640;
+    const startX = 80;
+    const startY = 220;
 
-    while (fontSize >= 15) {
+    while (fontSize >= 16) {
       ctx.font = `${fontSize}px Georgia`;
-      const lineHeight = fontSize + 14;
+      const lineHeight = fontSize + 10;
 
       const words = content.split(' ');
       let lines = [];
-      let currentLine = '';
+      let current = '';
 
       for (const word of words) {
-        const testLine = currentLine + word + ' ';
-        if (ctx.measureText(testLine).width > maxWidth) {
-          if (currentLine) lines.push(currentLine.trim());
-          currentLine = word + ' ';
+        const test = current + word + ' ';
+        if (ctx.measureText(test).width > maxWidth) {
+          if (current) lines.push(current.trim());
+          current = word + ' ';
         } else {
-          currentLine = testLine;
+          current = test;
         }
       }
-      if (currentLine) lines.push(currentLine.trim());
+      if (current) lines.push(current.trim());
 
-      // se couber, desenha
-      if (lines.length * lineHeight < 380) {
+      if (lines.length * lineHeight <= 140) {
         let y = startY;
         for (const line of lines) {
-          ctx.fillText(line, leftMargin, y);
+          ctx.fillText(line, startX, y);
           y += lineHeight;
         }
         break;
       }
-
       fontSize -= 1;
     }
 
-    // ========== DESENHOS SIMPLES ==========
-    ctx.strokeStyle = '#5c4a3a';
-    ctx.lineWidth = 1.8;
+    // Aspas decorativas
+    ctx.fillStyle = 'rgba(201,162,39,0.25)';
+    ctx.font = '120px Georgia';
+    ctx.fillText('"', 40, 250);
 
-    // estrelas
-    function star(x, y, r) {
-      ctx.beginPath();
-      for (let i = 0; i < 5; i++) {
-        const a = (i * 4 * Math.PI) / 5 - Math.PI / 2;
-        const px = x + r * Math.cos(a);
-        const py = y + r * Math.sin(a);
-        if (i === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-      ctx.stroke();
-    }
-
-    star(720, 90, 11);
-    star(750, 130, 8);
-    star(695, 140, 7);
-
-    // coração
-    ctx.beginPath();
-    ctx.moveTo(730, 200);
-    ctx.bezierCurveTo(730, 188, 752, 188, 752, 200);
-    ctx.bezierCurveTo(752, 218, 730, 235, 730, 248);
-    ctx.bezierCurveTo(730, 235, 708, 218, 708, 200);
-    ctx.bezierCurveTo(708, 188, 730, 188, 730, 200);
-    ctx.stroke();
-
-    // rodapé
-    ctx.fillStyle = '#8a7a6a';
+    // Rodapé
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
     ctx.font = '13px Georgia';
     ctx.textAlign = 'right';
-    ctx.fillText('Daily Planet  •  Quote', 760, 675);
+    ctx.fillText('Daily Planet', 750, 370);
 
     const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
       name: 'quote.png'
@@ -286,7 +259,7 @@ client.once('ready', async () => {
     await interaction.editReply({ files: [attachment] });
 
   } catch (error) {
-    console.error('Error generating quote:', error);
+    console.error(error);
     await interaction.editReply({ content: '❌ Failed to generate the quote.' });
   }
   return;
