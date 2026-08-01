@@ -47,10 +47,9 @@ client.once('ready', async () => {
       .addStringOption(opt => opt.setName('title').setDescription('Headline title').setRequired(true))
       .addStringOption(opt => opt.setName('content').setDescription('Article content').setRequired(true)),
 
-   new SlashCommandBuilder()
-      .setName('quote')
-      .setDescription('Create a comic-style quote from a message')
-      .setType(3),
+   new ContextMenuCommandBuilder()
+  .setName('quote')
+  .setType(ApplicationCommandType.Message),
 
     new SlashCommandBuilder()
       .setName('ship')
