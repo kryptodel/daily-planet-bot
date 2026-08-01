@@ -73,9 +73,12 @@ client.once('ready', async () => {
       .addStringOption(opt => opt.setName('title').setDescription('Breaking news title').setRequired(true)),
 
     new SlashCommandBuilder()
-      .setName('reporter')
-      .setDescription('Get hired as a Daily Planet reporter'),
-
+  .setName('reporter')
+  .setDescription('Issue an official Daily Planet press badge')
+  .addUserOption(opt =>
+    opt.setName('user')
+      .setDescription('The person who will receive the badge')
+      .setRequired(true)),
     new SlashCommandBuilder()
       .setName('8ball')
       .setDescription('Ask a question and the magic 8-ball will answer')
@@ -231,18 +234,21 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ content: '@here', embeds: [embed] });
   }
 
-  if (commandName === 'reporter') {
+    
+    if (commandName === 'reporter') {
+  const target = interaction.options.getUser('user');
+
   const roles = [
     'Investigative Reporter',
     'War Photographer',
     'Gossip Columnist',
     'International Correspondent',
     'Sports Editor',
-    'Intern who makes coffee and writes stories',
-    'Night Shift Reporter',
     'Crime Beat Reporter',
     'Political Correspondent',
-    'Feature Writer'
+    'Feature Writer',
+    'Night Shift Reporter',
+    'Junior Reporter'
   ];
 
   const role = roles[Math.floor(Math.random() * roles.length)];
@@ -251,142 +257,143 @@ client.on('interactionCreate', async interaction => {
   await interaction.deferReply();
 
   try {
-
-    const hireEmbed = new EmbedBuilder()
-      .setColor(0x00aa00)
-      .setTitle('📋 Contract Signed!')
-      .setDescription(
-        `Congratulations, **${interaction.user.username}**!\n\n` +
-        `You have just been hired as:\n### ${role}\n\n` +
-        `of the **Daily Planet**.\n\n` +
-        `Welcome to the team. Don't disappoint Perry White.`
-      )
-      .setFooter({ text: 'Digitally signed by Perry White' })
-      .setTimestamp();
-
-    await interaction.editReply({ embeds: [hireEmbed] });
-    
-    const canvas = createCanvas(600, 900);
+    const canvas = createCanvas(700, 1000);
     const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = '#0f1c2e';
-    ctx.fillRect(0, 0, 600, 900);
+    ctx.fillStyle = '#f8f6f1';
+    ctx.fillRect(0, 0, 700, 1000);
 
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 12;
-    ctx.strokeRect(15, 15, 570, 870);
 
-    ctx.strokeStyle = '#f0e6c8';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(30, 30, 540, 840);
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(20, 20, 660, 960);
+
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(35, 35, 630, 930);
 
     ctx.beginPath();
-    ctx.arc(300, 70, 22, 0, Math.PI * 2);
-    ctx.fillStyle = '#0a1220';
+    ctx.arc(350, 75, 18, 0, Math.PI * 2);
+    ctx.fillStyle = '#f8f6f1';
     ctx.fill();
-    ctx.strokeStyle = '#d4af37';
+    ctx.strokeStyle = '#222';
     ctx.lineWidth = 4;
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(300, 70, 14, 0, Math.PI * 2);
-    ctx.fillStyle = '#1a2a40';
+    ctx.arc(350, 75, 10, 0, Math.PI * 2);
+    ctx.fillStyle = '#ddd';
     ctx.fill();
 
-    ctx.fillStyle = '#d4af37';
-    ctx.font = 'bold 28px Georgia';
+    
+    ctx.fillStyle = '#111';
+    ctx.font = 'bold 48px Georgia';
     ctx.textAlign = 'center';
-    ctx.fillText('DAILY PLANET', 300, 130);
 
-    ctx.fillStyle = '#a0b4c8';
-    ctx.font = '16px Georgia';
-    ctx.fillText('METROPOLIS  •  PRESS CREDENTIAL', 300, 155);
+    const logo = await loadImage('daily-planet-logo.png');
+    ctx.drawImage(logo, 310, 105, 80, 80);
+    ctx.fillText('Daily', 230, 155);
+    
+    ctx.beginPath();
+    ctx.arc(350, 140, 32, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a4a8a';
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px Arial';
+    ctx.fillText('DP', 350, 146);
+
+    ctx.fillStyle = '#111';
+    ctx.font = 'bold 48px Georgia';
+    ctx.fillText('Planet', 480, 155);
+
+    ctx.fillStyle = '#555';
+    ctx.font = '14px Georgia';
+    ctx.fillText("METROPOLIS' GREATEST NEWSPAPER", 350, 195);
 
     ctx.beginPath();
-    ctx.moveTo(80, 175);
-    ctx.lineTo(520, 175);
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.fillStyle = '#1a2a40';
-    ctx.fillRect(175, 200, 250, 250);
-
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 5;
-    ctx.strokeRect(175, 200, 250, 250);
-
-    const avatar = await loadImage(
-      interaction.user.displayAvatarURL({ extension: 'png', size: 512 })
-    );
-    ctx.drawImage(avatar, 185, 210, 230, 230);
-
-    ctx.fillStyle = 'rgba(15, 28, 46, 0.15)';
-    ctx.fillRect(185, 210, 230, 230);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 32px Georgia';
-    ctx.fillText(interaction.user.username.toUpperCase(), 300, 500);
-
-    ctx.fillStyle = '#d4af37';
-    ctx.font = 'bold 22px Georgia';
-    ctx.fillText(role.toUpperCase(), 300, 540);
-
-    ctx.beginPath();
-    ctx.moveTo(120, 570);
-    ctx.lineTo(480, 570);
-    ctx.strokeStyle = '#3a5068';
+    ctx.moveTo(80, 220);
+    ctx.lineTo(620, 220);
+    ctx.strokeStyle = '#222';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    ctx.fillStyle = '#a0b4c8';
-    ctx.font = '18px Georgia';
-    ctx.fillText('BADGE ID', 300, 610);
+    ctx.fillStyle = '#222';
+    ctx.fillRect(70, 250, 280, 340);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(80, 260, 260, 320);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 28px Courier New';
-    ctx.fillText(badgeId, 300, 650);
+    const avatar = await loadImage(
+      target.displayAvatarURL({ extension: 'png', size: 512 })
+    );
+    ctx.drawImage(avatar, 90, 270, 240, 300);
 
-    ctx.fillStyle = '#a0b4c8';
+    ctx.save();
+    ctx.translate(520, 420);
+    ctx.rotate(-0.15);
+
+    ctx.fillStyle = '#8a8a8a';
+    ctx.font = 'bold 72px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('PRESS', 0, 0);
+
+    ctx.restore();
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(70, 620, 560, 160);
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(70, 620, 560, 160);
+
+    ctx.fillStyle = '#111';
+    ctx.font = 'bold 42px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText(target.username.toUpperCase(), 350, 690);
+
+    ctx.fillStyle = '#444';
+    ctx.font = '26px Georgia';
+    ctx.fillText(role.toUpperCase(), 350, 740);
+
+    ctx.fillStyle = '#333';
     ctx.font = '16px Georgia';
-    ctx.fillText('ISSUED', 300, 700);
+    ctx.fillText(`BADGE ID: ${badgeId}`, 350, 830);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '20px Georgia';
-    ctx.fillText(new Date().toLocaleDateString('en-US'), 300, 730);
+    ctx.fillStyle = '#666';
+    ctx.font = '15px Georgia';
+    ctx.fillText(`Issued: ${new Date().toLocaleDateString('en-US')}`, 350, 860);
 
-    ctx.beginPath();
-    ctx.moveTo(80, 780);
-    ctx.lineTo(520, 780);
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.fillStyle = '#a0b4c8';
-    ctx.font = '14px Georgia';
-    ctx.fillText('Authorized by Perry White  •  Editor-in-Chief', 300, 820);
-
-    ctx.fillStyle = '#d4af37';
-    ctx.font = 'bold 15px Georgia';
-    ctx.fillText('THE MOST TRUSTED NEWSPAPER IN METROPOLIS', 300, 855);
+    ctx.fillStyle = '#1a4a8a';
+    ctx.font = 'bold 14px Georgia';
+    ctx.fillText('AUTHORIZED BY PERRY WHITE  •  EDITOR-IN-CHIEF', 350, 910);
 
     const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
-      name: 'reporter-badge.png'
+      name: 'press-badge.png'
     });
 
-    await interaction.followUp({
-      content: '🪪 **Your official Daily Planet press badge has been issued:**',
+    const embed = new EmbedBuilder()
+      .setColor(0x1a4a8a)
+      .setTitle('📋 Press Badge Issued')
+      .setDescription(
+        `**${target}** has been officially hired by the **Daily Planet**!\n\n` +
+        `**Position:** ${role}\n` +
+        `**Badge ID:** \`${badgeId}\`\n\n` +
+        `Welcome to the team. Don't disappoint Perry White.`
+      )
+      .setImage('attachment://press-badge.png')
+      .setFooter({ text: 'Daily Planet • Metropolis' })
+      .setTimestamp();
+
+    await interaction.editReply({
+      embeds: [embed],
       files: [attachment]
     });
 
   } catch (error) {
-    console.error('Error generating reporter badge:', error);
+    console.error('Error generating press badge:', error);
     await interaction.editReply({
-      content: '❌ Failed to generate the reporter badge. Please try again.'
+      content: '❌ Failed to generate the press badge.'
     });
   }
-      }
-
+    }
   if (commandName === '8ball') {
     const question = interaction.options.getString('question');
 
