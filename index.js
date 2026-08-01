@@ -138,7 +138,7 @@ const member = message.member;
 const displayName = member?.displayName || user.globalName || user.username;
 let content = message.content || '*[sem texto]*';
 
-  if (content.length > 300) {
+  if (content.length > 500) {
     content = content.slice(0, 297) + '...';
   }
 
@@ -202,45 +202,71 @@ let content = message.content || '*[sem texto]*';
     ctx.closePath();
     ctx.fill();
 
+// ========== TEXTO ==========
 ctx.fillStyle = '#0f172a';
 ctx.textAlign = 'left';
 
+const textBox = {
+    x: 80,
+    y: 280,
+    width: 650,
+    height: 120
+};
+
 let fontSize = 24;
+let lines = [];
 
-const maxWidth = 660;
-const maxHeight = 130;
-
-function wrapText(text, size) {
-    ctx.font = `${size}px Georgia`;
+function createLines(text) {
+    ctx.font = `${fontSize}px Georgia`;
 
     const words = text.split(/\s+/);
-    const lines = [];
+    const result = [];
     let line = '';
 
     for (const word of words) {
-        const test = line ? `${line} ${word}` : word;
+        const testLine = line.length ? `${line} ${word}` : word;
 
-        if (ctx.measureText(test).width <= maxWidth) {
-            line = test;
+        if (ctx.measureText(testLine).width <= textBox.width) {
+            line = testLine;
         } else {
-            if (line) lines.push(line);
+            result.push(line);
             line = word;
         }
     }
 
-    if (line) lines.push(line);
+    if (line) result.push(line);
 
-    return lines;
+    return result;
 }
 
-let lines = wrapText(content, fontSize);
+// Diminui até caber
+while (fontSize >= 12) {
+    lines = createLines(content);
 
-while (
-    (lines.length * (fontSize + 8)) > maxHeight &&
-    fontSize > 14
-) {
+    const totalHeight = lines.length * (fontSize + 8);
+
+    if (totalHeight <= textBox.height && lines.every(line => {
+        return ctx.measureText(line).width <= textBox.width;
+    })) {
+        break;
+    }
+
     fontSize--;
-    lines = wrapText(content, fontSize);
+}
+
+// Se ainda for enorme, corta
+if (lines.length > 5) {
+    lines = lines.slice(0, 5);
+    lines[4] = lines[4].slice(0, -3) + '...';
+}
+
+ctx.font = `${fontSize}px Georgia`;
+
+let y = textBox.y;
+
+for (const line of lines) {
+    ctx.fillText(line, textBox.x, y);
+    y += fontSize + 8;
 }
 
 ctx.font = `${fontSize}px Georgia`;
