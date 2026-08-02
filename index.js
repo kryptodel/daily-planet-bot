@@ -269,16 +269,6 @@ for (const line of lines) {
     y += fontSize + 8;
 }
 
-ctx.font = `${fontSize}px Georgia`;
-
-const lineHeight = fontSize + 8;
-let y = 280;
-
-for (const line of lines) {
-    ctx.fillText(line, 80, y);
-    y += lineHeight;
-}
-
     ctx.fillStyle = '#d4af37';
     ctx.font = 'bold 14px Georgia';
     ctx.textAlign = 'right';
