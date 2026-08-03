@@ -139,8 +139,8 @@ client.on('messageCreate', async message => {
 
   if (message.content.trim().toLowerCase() === 'what time is it?') {
     const gifs = [
-      'hero-time1.gif',
-      'hero-time2.gif'
+      'ben10.gif',
+      'alien-ben-10.gif'
     ];
 
     const selectedGif = gifs[Math.floor(Math.random() * gifs.length)];
