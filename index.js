@@ -134,4 +134,36 @@ client.on('messageCreate', async message => {
   }
 });
 
+client.on('messageCreate', async message => {
+  if (message.author.bot) return;
+
+  if (message.content.trim().toLowerCase() === 'what time is it?') {
+    const gifs = [
+      'hero-time1.gif',
+      'hero-time2.gif'
+    ];
+
+    const selectedGif = gifs[Math.floor(Math.random() * gifs.length)];
+
+    const embed = new EmbedBuilder()
+      .setColor(0x32CD32)
+      .setTitle('⌚ IT\'S HERO TIME! 🟢')
+      .setDescription(
+        `**${message.author}** activated the Omnitrix!\n\n` +
+        `*Choose your hero. Save the day.*`
+      )
+      .setImage(`attachment://${selectedGif}`)
+      .setFooter({
+        text: 'Ben 10 • Hero Time',
+        iconURL: message.author.displayAvatarURL()
+      })
+      .setTimestamp();
+
+    await message.reply({
+      embeds: [embed],
+      files: [selectedGif]
+    });
+  }
+});
+
 client.login(process.env.TOKEN);
