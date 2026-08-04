@@ -190,31 +190,68 @@ module.exports = {
       }
 
       const paragraphs = rawContent.split(/\n+/).filter(p => p.trim());
-      const allLines = [];
-
-      ctx.font = '15px Georgia';
-      for (const p of paragraphs) {
-        const lines = wrapText(ctx, p.trim(), 450);
-        allLines.push(...lines);
-        allLines.push('');
-      }
 
       const leftX = 55;
       const rightX = 530;
-      const lineHeight = 21;
+      const maxTextWidth = 450;
+      const topLimit = contentY + 18;
+      const bottomLimit = hasImg2 ? img2Y - 20 : 1360;
+      const availableHeight = bottomLimit - topLimit;
 
-      let leftY = contentY + 18;
-      let rightY = hasImg1 ? contentY + 255 : contentY + 18;
+      let fontSize = 17;
+      let lineHeight = 24;
+      let allLines = [];
+      let totalHeight = 0;
+
+      for (let size = 22; size >= 13; size--) {
+        ctx.font = `${size}px Georgia`;
+        const tempLines = [];
+        let height = 0;
+
+        for (const p of paragraphs) {
+          const lines = wrapText(ctx, p.trim(), maxTextWidth);
+          tempLines.push(...lines);
+          tempLines.push('');
+        }
+
+        if (tempLines[tempLines.length - 1] === '') tempLines.pop();
+
+        height = tempLines.length * (size + 7);
+
+        if (height <= availableHeight || size === 13) {
+          fontSize = size;
+          lineHeight = size + 7;
+          allLines = tempLines;
+          totalHeight = height;
+          break;
+        }
+      }
+
+      if (totalHeight < availableHeight * 0.45 && fontSize < 20) {
+        fontSize = Math.min(20, fontSize + 3);
+        lineHeight = fontSize + 7;
+        ctx.font = `${fontSize}px Georgia`;
+        allLines = [];
+        for (const p of paragraphs) {
+          const lines = wrapText(ctx, p.trim(), maxTextWidth);
+          allLines.push(...lines);
+          allLines.push('');
+        }
+        if (allLines[allLines.length - 1] === '') allLines.pop();
+      }
+
+      let leftY = topLimit;
+      let rightY = hasImg1 ? contentY + 255 : topLimit;
       let i = 0;
 
-      while (i < allLines.length && leftY < (hasImg1 ? contentY + 250 : 1000)) {
+      while (i < allLines.length && leftY < (hasImg1 ? contentY + 250 : bottomLimit)) {
         if (allLines[i] !== '') {
           ctx.fillStyle = '#1a1a1a';
-          ctx.font = '15px Georgia';
+          ctx.font = `${fontSize}px Georgia`;
           ctx.textAlign = 'left';
           ctx.fillText(allLines[i], leftX, leftY);
         }
-        leftY += allLines[i] === '' ? 8 : lineHeight;
+        leftY += allLines[i] === '' ? fontSize * 0.5 : lineHeight;
         i++;
       }
 
@@ -224,33 +261,33 @@ module.exports = {
         if (leftY < limitBeforeImg2) {
           if (allLines[i] !== '') {
             ctx.fillStyle = '#1a1a1a';
-            ctx.font = '15px Georgia';
+            ctx.font = `${fontSize}px Georgia`;
             ctx.fillText(allLines[i], leftX, leftY);
           }
-          leftY += allLines[i] === '' ? 8 : lineHeight;
+          leftY += allLines[i] === '' ? fontSize * 0.5 : lineHeight;
           i++;
         } else if (rightY < limitBeforeImg2) {
           if (allLines[i] !== '') {
             ctx.fillStyle = '#1a1a1a';
-            ctx.font = '15px Georgia';
+            ctx.font = `${fontSize}px Georgia`;
             ctx.fillText(allLines[i], rightX, rightY);
           }
-          rightY += allLines[i] === '' ? 8 : lineHeight;
+          rightY += allLines[i] === '' ? fontSize * 0.5 : lineHeight;
           i++;
         } else break;
       }
 
       if (hasImg2) {
-        let sideY = img2Y + 10;
-        const sideMax = img2Y + img2H - 10;
+        let sideY = img2Y + 12;
+        const sideMax = img2Y + img2H - 12;
 
         while (i < allLines.length && sideY < sideMax) {
           if (allLines[i] !== '') {
             ctx.fillStyle = '#1a1a1a';
-            ctx.font = '15px Georgia';
+            ctx.font = `${fontSize}px Georgia`;
             ctx.fillText(allLines[i], rightX, sideY);
           }
-          sideY += allLines[i] === '' ? 8 : lineHeight;
+          sideY += allLines[i] === '' ? fontSize * 0.5 : lineHeight;
           i++;
         }
       }
@@ -321,4 +358,4 @@ function drawImageCover(ctx, img, x, y, w, h) {
   ctx.clip();
   ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
   ctx.restore();
-    }
+  }
