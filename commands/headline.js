@@ -2,7 +2,7 @@ const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 
 // ========== COLE O LINK DA SUA LOGO AQUI ==========
-const LOGO_URL = 'https://cdn.discordapp.com/attachments/1525521626047713442/1534185173783154808/Novo_projeto_73_C3F53FF.png?ex=6a7334c9&is=6a71e349&hm=714d8259a3861317b5e9b6333f541358afe5ec304eb39cfce2766a445430a967&'; // ← troque por seu link
+const LOGO_URL = 'https://cdn.discordapp.com/attachments/1525521626047713442/1534185173783154808/Novo_projeto_73_C3F53FF.png?ex=6a7334c9&is=6a71e349&hm=714d8259a3861317b5e9b6333f541358afe5ec304eb39cfce2766a445430a967&'; // ← troque pelo seu link
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,7 +25,7 @@ module.exports = {
     )
     .addAttachmentOption(opt =>
       opt.setName('image2')
-        .setDescription('Segunda foto (mais embaixo)')
+        .setDescription('Segunda foto (mais embaixo - 1:1)')
         .setRequired(false)
     ),
 
@@ -53,12 +53,11 @@ module.exports = {
       ctx.fillStyle = '#111';
       ctx.fillRect(30, 30, 940, 100);
 
-      // Carrega a logo
       let logo = null;
       try {
         logo = await loadImage(LOGO_URL);
       } catch (e) {
-        console.log('Logo não carregou, usando texto puro');
+        console.log('Logo não carregou');
       }
 
       ctx.fillStyle = '#f4efe6';
@@ -66,9 +65,9 @@ module.exports = {
       ctx.textAlign = 'center';
 
       if (logo) {
-        // "Daily" + logo + "Planet"
-        const logoSize = 58;
-        const gap = 12;
+        const logoSize = 72;          // ← maior
+        const gap = 14;
+        const logoY = 40;             // ← mais para cima
 
         const dailyWidth = ctx.measureText('Daily').width;
         const planetWidth = ctx.measureText('Planet').width;
@@ -76,13 +75,13 @@ module.exports = {
         const startX = 500 - totalWidth / 2;
 
         ctx.textAlign = 'left';
-        ctx.fillText('Daily', startX, 88);
+        ctx.fillText('Daily', startX, 85);
 
-        ctx.drawImage(logo, startX + dailyWidth + gap, 48, logoSize, logoSize);
+        ctx.drawImage(logo, startX + dailyWidth + gap, logoY, logoSize, logoSize);
 
-        ctx.fillText('Planet', startX + dailyWidth + gap + logoSize + gap, 88);
+        ctx.fillText('Planet', startX + dailyWidth + gap + logoSize + gap, 85);
       } else {
-        ctx.fillText('Daily Planet', 500, 88);
+        ctx.fillText('Daily Planet', 500, 85);
       }
 
       ctx.font = '12px Georgia';
@@ -139,17 +138,18 @@ module.exports = {
       const hasImg1 = image1 && image1.contentType?.startsWith('image/');
       const hasImg2 = image2 && image2.contentType?.startsWith('image/');
 
-      // Imagem 1 - topo direita (média)
+      // Imagem 1 - topo direita
       if (hasImg1) {
         const img = await loadImage(image1.url);
         drawImageCover(ctx, img, 530, contentY, 410, 240);
       }
 
-      // Imagem 2 - mais embaixo, tamanho menor (não banner)
-      const img2Y = 1050;
+      // Imagem 2 - quadrada (1:1) mais embaixo
+      const img2Size = 320; // 1:1
+      const img2Y = 1080;
       if (hasImg2) {
         const img = await loadImage(image2.url);
-        drawImageCover(ctx, img, 55, img2Y, 480, 220); // menor e mais natural
+        drawImageCover(ctx, img, 55, img2Y, img2Size, img2Size);
       }
 
       // ========== TEXTO ==========
@@ -281,4 +281,4 @@ function drawImageCover(ctx, img, x, y, w, h) {
   ctx.strokeStyle = '#222';
   ctx.lineWidth = 2;
   ctx.strokeRect(x, y, w, h);
-  }
+}
