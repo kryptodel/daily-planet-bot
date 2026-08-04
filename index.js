@@ -147,9 +147,9 @@ client.on('messageCreate', async message => {
 
     const embed = new EmbedBuilder()
   .setColor(0x39FF14) 
-  .setTitle('🟢 OMNITRIX SIGNAL DETECTED')
+  .setTitle('🟢 REFERENCE DETECTED')
   .setDescription(
-    `## ⚡ IT'S HERO TIME!\n\n` +
+    `##IT'S HERO TIME!\n\n` +
     `**👤 User:** ${message.author}\n` +
     `**📡 Status:** Transformation Initiated...\n` +
     `**⚡ Power Level:** ██████████ **100%**\n\n` +
@@ -158,7 +158,7 @@ client.on('messageCreate', async message => {
   .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
   .setImage(`attachment://${selectedGif}`)
   .setFooter({
-    text: 'Ben 10 • The Universe Needs a Hero'
+    text: 'Daily Planet • The Universe Needs a Hero'
   })
   .setTimestamp();
 
