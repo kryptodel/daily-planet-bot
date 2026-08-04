@@ -147,7 +147,7 @@ client.on('messageCreate', async message => {
 
     const embed = new EmbedBuilder()
   .setColor(0x39FF14) 
-  .setTitle('🟢 REFERENCE DETECTED')
+  .setTitle('REFERENCE DETECTED')
   .setDescription(
     `## IT'S HERO TIME!\n\n` +
     `**👤 User:** ${message.author}\n` +
