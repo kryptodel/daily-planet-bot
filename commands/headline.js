@@ -38,7 +38,6 @@ module.exports = {
       const canvas = createCanvas(1000, 1450);
       const ctx = canvas.getContext('2d');
 
-      // ========== FUNDO ==========
       ctx.fillStyle = '#f4efe6';
       ctx.fillRect(0, 0, 1000, 1450);
 
@@ -46,11 +45,9 @@ module.exports = {
       ctx.lineWidth = 6;
       ctx.strokeRect(12, 12, 976, 1426);
 
-      // ========== MASTHEAD ==========
       ctx.fillStyle = '#111';
       ctx.fillRect(30, 30, 940, 100);
 
-      // Texto + Logo desenhada
       ctx.fillStyle = '#f4efe6';
       ctx.font = 'bold 46px Georgia';
       ctx.textAlign = 'left';
@@ -59,52 +56,80 @@ module.exports = {
       const planet = 'Planet';
       const dailyWidth = ctx.measureText(daily).width;
       const planetWidth = ctx.measureText(planet).width;
-      const logoSize = 62;
-      const gap = 12;
+      const logoSize = 64;
+      const gap = 10;
       const totalWidth = dailyWidth + gap + logoSize + gap + planetWidth;
       const startX = 500 - totalWidth / 2;
 
       ctx.fillText(daily, startX, 82);
-
-      // ===== LOGO DESENHADA (globo) =====
       const logoX = startX + dailyWidth + gap + logoSize / 2;
-      const logoY = 72;
+      const logoY = 68;
+      const r = 28;
 
-      // Círculo principal
+      // Globo
       ctx.beginPath();
-      ctx.arc(logoX, logoY, 26, 0, Math.PI * 2);
-      ctx.fillStyle = '#c9a227';
+      ctx.arc(logoX, logoY, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#e8b923';
       ctx.fill();
 
-      // Anéis
-      ctx.strokeStyle = '#f4efe6';
-      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1.3;
+
+      for (let i = -2; i <= 2; i++) {
+        const y = logoY + i * 9;
+        const halfW = Math.sqrt(Math.max(0, r * r - (i * 9) * (i * 9))) * 0.95;
+        if (halfW > 0) {
+          ctx.beginPath();
+          ctx.moveTo(logoX - halfW, y);
+          ctx.lineTo(logoX + halfW, y);
+          ctx.stroke();
+        }
+      }
+
       ctx.beginPath();
-      ctx.ellipse(logoX, logoY, 28, 12, -0.4, 0, Math.PI * 2);
+      ctx.ellipse(logoX, logoY, r * 0.35, r, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(logoX, logoY, r * 0.7, r, 0, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.ellipse(logoX, logoY, 28, 12, 0.4, 0, Math.PI * 2);
+      ctx.arc(logoX, logoY, r, 0, Math.PI * 2);
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Continentes simples
-      ctx.fillStyle = '#1a1a1a';
+      ctx.save();
+      ctx.translate(logoX, logoY);
+      ctx.rotate(-0.25);
+
+      ctx.fillStyle = '#1a3a8f';
       ctx.beginPath();
-      ctx.arc(logoX - 6, logoY - 4, 7, 0, Math.PI * 2);
+      ctx.moveTo(-48, -7);
+      ctx.lineTo(48, -7);
+      ctx.lineTo(52, 0);
+      ctx.lineTo(48, 7);
+      ctx.lineTo(-48, 7);
+      ctx.lineTo(-52, 0);
+      ctx.closePath();
       ctx.fill();
-      ctx.beginPath();
-      ctx.arc(logoX + 8, logoY + 5, 5, 0, Math.PI * 2);
-      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('DAILY PLANET', 0, 0);
+      ctx.restore();
 
       ctx.fillStyle = '#f4efe6';
+      ctx.font = 'bold 46px Georgia';
+      ctx.textAlign = 'left';
       ctx.fillText(planet, startX + dailyWidth + gap + logoSize + gap, 82);
 
-      // Subtítulo
       ctx.font = '12px Georgia';
       ctx.textAlign = 'center';
       ctx.fillText('A GREAT METROPOLITAN NEWSPAPER  •  METROPOLIS', 500, 118);
 
-      // Linha dourada
       ctx.strokeStyle = '#c9a227';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
@@ -112,7 +137,6 @@ module.exports = {
       ctx.lineTo(960, 145);
       ctx.stroke();
 
-      // Volume + Data
       const today = new Date().toLocaleDateString('en-US', {
         year: 'numeric', month: 'long', day: 'numeric'
       });
@@ -124,12 +148,11 @@ module.exports = {
       ctx.textAlign = 'right';
       ctx.fillText(today, 955, 168);
 
-      // ========== TÍTULO ==========
       ctx.fillStyle = '#111';
       ctx.font = 'bold 34px Georgia';
       ctx.textAlign = 'center';
 
-      const titleLines = wrapText(ctx, title.toUpperCase(), 900, 34);
+      const titleLines = wrapText(ctx, title.toUpperCase(), 900);
       let titleY = 210;
       for (const line of titleLines.slice(0, 3)) {
         ctx.fillText(line, 500, titleY);
@@ -150,32 +173,28 @@ module.exports = {
 
       let contentY = titleY + 50;
 
-      // ========== IMAGENS ==========
-      const hasImg1 = image1 && image1.contentType?.startsWith('image/');
-      const hasImg2 = image2 && image2.contentType?.startsWith('image/');
+      const hasImg1 = image1 && (image1.contentType?.startsWith('image/') || image1.contentType === 'image/gif');
+      const hasImg2 = image2 && (image2.contentType?.startsWith('image/') || image2.contentType === 'image/gif');
 
-      // Imagem 1 - topo direita
       if (hasImg1) {
         const img = await loadImage(image1.url);
         drawImageCover(ctx, img, 530, contentY, 410, 240);
       }
 
-      // Imagem 2 - 4:3 mais embaixo (esquerda)
       const img2W = 420;
-      const img2H = 315; // 4:3
+      const img2H = 315;
       const img2Y = 1020;
       if (hasImg2) {
         const img = await loadImage(image2.url);
         drawImageCover(ctx, img, 55, img2Y, img2W, img2H);
       }
 
-      // ========== TEXTO ==========
       const paragraphs = rawContent.split(/\n+/).filter(p => p.trim());
       const allLines = [];
 
       ctx.font = '15px Georgia';
       for (const p of paragraphs) {
-        const lines = wrapText(ctx, p.trim(), 450, 15);
+        const lines = wrapText(ctx, p.trim(), 450);
         allLines.push(...lines);
         allLines.push('');
       }
@@ -188,7 +207,6 @@ module.exports = {
       let rightY = hasImg1 ? contentY + 255 : contentY + 18;
       let i = 0;
 
-      // 1) Coluna esquerda ao lado da imagem 1
       while (i < allLines.length && leftY < (hasImg1 ? contentY + 250 : 1000)) {
         if (allLines[i] !== '') {
           ctx.fillStyle = '#1a1a1a';
@@ -200,7 +218,6 @@ module.exports = {
         i++;
       }
 
-      // 2) Preenche as duas colunas até a altura da imagem 2
       const limitBeforeImg2 = hasImg2 ? img2Y - 15 : 1360;
 
       while (i < allLines.length) {
@@ -220,12 +237,9 @@ module.exports = {
           }
           rightY += allLines[i] === '' ? 8 : lineHeight;
           i++;
-        } else {
-          break;
-        }
+        } else break;
       }
 
-      // 3) Texto ao lado da imagem 2 (coluna direita)
       if (hasImg2) {
         let sideY = img2Y + 10;
         const sideMax = img2Y + img2H - 10;
@@ -241,7 +255,6 @@ module.exports = {
         }
       }
 
-      // ========== RODAPÉ ==========
       ctx.strokeStyle = '#222';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
@@ -312,4 +325,4 @@ function drawImageCover(ctx, img, x, y, w, h) {
   ctx.strokeStyle = '#222';
   ctx.lineWidth = 2;
   ctx.strokeRect(x, y, w, h);
-        }
+}
