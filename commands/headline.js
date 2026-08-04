@@ -17,12 +17,12 @@ module.exports = {
     )
     .addAttachmentOption(opt =>
       opt.setName('image1')
-        .setDescription('Foto principal (aparece no topo)')
+        .setDescription('Foto principal (topo direita)')
         .setRequired(false)
     )
     .addAttachmentOption(opt =>
       opt.setName('image2')
-        .setDescription('Segunda foto (aparece mais embaixo)')
+        .setDescription('Segunda foto (mais embaixo)')
         .setRequired(false)
     ),
 
@@ -42,7 +42,6 @@ module.exports = {
       ctx.fillStyle = '#f4efe6';
       ctx.fillRect(0, 0, 1000, 1450);
 
-      // Borda
       ctx.strokeStyle = '#222';
       ctx.lineWidth = 6;
       ctx.strokeRect(12, 12, 976, 1426);
@@ -59,7 +58,6 @@ module.exports = {
       ctx.font = '13px Georgia';
       ctx.fillText('A GREAT METROPOLITAN NEWSPAPER  •  METROPOLIS', 500, 110);
 
-      // Linha dourada
       ctx.strokeStyle = '#c9a227';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
@@ -67,7 +65,6 @@ module.exports = {
       ctx.lineTo(960, 140);
       ctx.stroke();
 
-      // Volume + Data
       const today = new Date().toLocaleDateString('en-US', {
         year: 'numeric', month: 'long', day: 'numeric'
       });
@@ -76,123 +73,108 @@ module.exports = {
       ctx.font = '13px Georgia';
       ctx.textAlign = 'left';
       ctx.fillText('Volume 12  |  Issue 47', 45, 162);
-
       ctx.textAlign = 'right';
       ctx.fillText(today, 955, 162);
 
       // ========== TÍTULO ==========
       ctx.fillStyle = '#111';
-      ctx.font = 'bold 36px Georgia';
+      ctx.font = 'bold 34px Georgia';
       ctx.textAlign = 'center';
 
-      const titleLines = wrapText(ctx, title.toUpperCase(), 900, 36);
-      let titleY = 210;
+      const titleLines = wrapText(ctx, title.toUpperCase(), 900, 34);
+      let titleY = 205;
       for (const line of titleLines.slice(0, 3)) {
         ctx.fillText(line, 500, titleY);
-        titleY += 42;
+        titleY += 40;
       }
 
-      // Linha
       ctx.strokeStyle = '#111';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(60, titleY + 8);
-      ctx.lineTo(940, titleY + 8);
+      ctx.moveTo(60, titleY + 6);
+      ctx.lineTo(940, titleY + 6);
       ctx.stroke();
 
-      // Autor
       ctx.fillStyle = '#444';
-      ctx.font = 'italic 15px Georgia';
+      ctx.font = 'italic 14px Georgia';
       ctx.textAlign = 'left';
-      ctx.fillText(`By ${interaction.user.username}  •  Daily Planet Staff`, 60, titleY + 32);
+      ctx.fillText(`By ${interaction.user.username}  •  Daily Planet Staff`, 60, titleY + 28);
 
-      let currentY = titleY + 55;
+      let contentY = titleY + 50;
 
-      // ========== IMAGEM 1 (topo direita) ==========
+      // ========== IMAGENS ==========
       const hasImg1 = image1 && image1.contentType?.startsWith('image/');
       const hasImg2 = image2 && image2.contentType?.startsWith('image/');
 
+      // Imagem 1 - topo direita
       if (hasImg1) {
         const img = await loadImage(image1.url);
-        drawImageCover(ctx, img, 520, currentY, 420, 260);
+        drawImageCover(ctx, img, 530, contentY, 410, 250);
       }
 
-      // ========== TEXTO EM COLUNAS ==========
+      // Imagem 2 - posição fixa mais embaixo (garantida)
+      let img2Y = 980;
+      if (hasImg2) {
+        const img = await loadImage(image2.url);
+        drawImageCover(ctx, img, 55, img2Y, 890, 230);
+      }
+
+      // ========== TEXTO ==========
       const paragraphs = rawContent.split(/\n+/).filter(p => p.trim());
       const allLines = [];
 
-      ctx.font = '16px Georgia';
+      ctx.font = '15px Georgia';
       for (const p of paragraphs) {
-        const lines = wrapText(ctx, p.trim(), 430, 16);
-        allLines.push(...lines, ''); // linha vazia = espaço entre parágrafos
+        const lines = wrapText(ctx, p.trim(), 450, 15);
+        allLines.push(...lines);
+        allLines.push(''); // espaço entre parágrafos
       }
 
-      // Coluna esquerda
-      let leftY = currentY + 20;
-      let rightY = currentY + 20;
       const leftX = 55;
-      const rightX = 520;
-      const colWidth = 430;
-      const lineHeight = 22;
-      const maxY = 1280;
+      const rightX = 530;
+      const lineHeight = 21;
+      const maxTextY = hasImg2 ? img2Y - 20 : 1360;
 
-      let lineIndex = 0;
+      let leftY = contentY + 18;
+      let rightY = hasImg1 ? contentY + 265 : contentY + 18; // começa abaixo da img1
+      let i = 0;
 
-      // Primeiro preenche a coluna esquerda até a altura da imagem 1
-      const img1Bottom = hasImg1 ? currentY + 270 : currentY;
-
-      while (lineIndex < allLines.length && leftY < img1Bottom) {
-        if (allLines[lineIndex] === '') {
-          leftY += 10;
-        } else {
+      // Primeiro preenche a esquerda ao lado da imagem 1
+      while (i < allLines.length && leftY < (hasImg1 ? contentY + 260 : maxTextY)) {
+        if (allLines[i] !== '') {
           ctx.fillStyle = '#1a1a1a';
-          ctx.font = '16px Georgia';
+          ctx.font = '15px Georgia';
           ctx.textAlign = 'left';
-          ctx.fillText(allLines[lineIndex], leftX, leftY);
-          leftY += lineHeight;
+          ctx.fillText(allLines[i], leftX, leftY);
         }
-        lineIndex++;
+        leftY += allLines[i] === '' ? 8 : lineHeight;
+        i++;
       }
 
-      // Continua preenchendo as duas colunas
-      while (lineIndex < allLines.length) {
-        // Coluna esquerda
-        if (leftY < maxY) {
-          if (allLines[lineIndex] === '') {
-            leftY += 10;
-          } else {
+      // Depois preenche as duas colunas abaixo
+      while (i < allLines.length) {
+        let placed = false;
+
+        if (leftY < maxTextY) {
+          if (allLines[i] !== '') {
             ctx.fillStyle = '#1a1a1a';
-            ctx.font = '16px Georgia';
-            ctx.fillText(allLines[lineIndex], leftX, leftY);
-            leftY += lineHeight;
+            ctx.font = '15px Georgia';
+            ctx.fillText(allLines[i], leftX, leftY);
           }
-          lineIndex++;
-          continue;
+          leftY += allLines[i] === '' ? 8 : lineHeight;
+          placed = true;
+        } else if (rightY < maxTextY) {
+          if (allLines[i] !== '') {
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = '15px Georgia';
+            ctx.fillText(allLines[i], rightX, rightY);
+          }
+          rightY += allLines[i] === '' ? 8 : lineHeight;
+          placed = true;
         }
 
-        // Coluna direita (só depois da imagem 1)
-        if (rightY < maxY && lineIndex < allLines.length) {
-          if (allLines[lineIndex] === '') {
-            rightY += 10;
-          } else {
-            ctx.fillStyle = '#1a1a1a';
-            ctx.font = '16px Georgia';
-            ctx.fillText(allLines[lineIndex], rightX, rightY);
-            rightY += lineHeight;
-          }
-          lineIndex++;
-        } else {
-          break;
-        }
-      }
-
-      // ========== IMAGEM 2 (mais embaixo) ==========
-      if (hasImg2) {
-        const img = await loadImage(image2.url);
-        const img2Y = Math.max(leftY, rightY) + 25;
-        if (img2Y + 240 < 1380) {
-          drawImageCover(ctx, img, 55, img2Y, 890, 240);
-        }
+        if (!placed) break;
+        i++;
       }
 
       // ========== RODAPÉ ==========
@@ -221,7 +203,6 @@ module.exports = {
   }
 };
 
-// ========== HELPERS ==========
 function wrapText(ctx, text, maxWidth, fontSize) {
   const words = text.split(' ');
   const lines = [];
