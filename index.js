@@ -149,7 +149,7 @@ client.on('messageCreate', async message => {
   .setColor(0x39FF14) 
   .setTitle('🟢 REFERENCE DETECTED')
   .setDescription(
-    `##IT'S HERO TIME!\n\n` +
+    `## IT'S HERO TIME!\n\n` +
     `**👤 User:** ${message.author}\n` +
     `**📡 Status:** Transformation Initiated...\n` +
     `**⚡ Power Level:** ██████████ **100%**\n\n` +
