@@ -1,31 +1,28 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 
-// ========== COLE O LINK DA SUA LOGO AQUI ==========
-const LOGO_URL = 'https://cdn.discordapp.com/attachments/1525521626047713442/1534185173783154808/Novo_projeto_73_C3F53FF.png?ex=6a7334c9&is=6a71e349&hm=714d8259a3861317b5e9b6333f541358afe5ec304eb39cfce2766a445430a967&'; // ← troque pelo seu link
-
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('headline')
-    .setDescription('Gera uma página oficial do jornal Daily Planet')
+    .setDescription('Generate an official Daily Planet newspaper page')
     .addStringOption(opt =>
       opt.setName('title')
-        .setDescription('Título da matéria')
+        .setDescription('Article headline')
         .setRequired(true)
     )
     .addStringOption(opt =>
       opt.setName('content')
-        .setDescription('Texto da matéria (use \\n para parágrafos)')
+        .setDescription('Article content (use \\n for paragraphs)')
         .setRequired(true)
     )
     .addAttachmentOption(opt =>
       opt.setName('image1')
-        .setDescription('Foto principal (topo direita)')
+        .setDescription('Main image (top right)')
         .setRequired(false)
     )
     .addAttachmentOption(opt =>
       opt.setName('image2')
-        .setDescription('Segunda foto (mais embaixo - 1:1)')
+        .setDescription('Second image (lower section - 4:3)')
         .setRequired(false)
     ),
 
@@ -53,37 +50,56 @@ module.exports = {
       ctx.fillStyle = '#111';
       ctx.fillRect(30, 30, 940, 100);
 
-      let logo = null;
-      try {
-        logo = await loadImage(LOGO_URL);
-      } catch (e) {
-        console.log('Logo não carregou');
-      }
-
+      // Texto + Logo desenhada
       ctx.fillStyle = '#f4efe6';
       ctx.font = 'bold 46px Georgia';
-      ctx.textAlign = 'center';
+      ctx.textAlign = 'left';
 
-      if (logo) {
-        const logoSize = 72;          // ← maior
-        const gap = 14;
-        const logoY = 40;             // ← mais para cima
+      const daily = 'Daily';
+      const planet = 'Planet';
+      const dailyWidth = ctx.measureText(daily).width;
+      const planetWidth = ctx.measureText(planet).width;
+      const logoSize = 62;
+      const gap = 12;
+      const totalWidth = dailyWidth + gap + logoSize + gap + planetWidth;
+      const startX = 500 - totalWidth / 2;
 
-        const dailyWidth = ctx.measureText('Daily').width;
-        const planetWidth = ctx.measureText('Planet').width;
-        const totalWidth = dailyWidth + gap + logoSize + gap + planetWidth;
-        const startX = 500 - totalWidth / 2;
+      ctx.fillText(daily, startX, 82);
 
-        ctx.textAlign = 'left';
-        ctx.fillText('Daily', startX, 85);
+      // ===== LOGO DESENHADA (globo) =====
+      const logoX = startX + dailyWidth + gap + logoSize / 2;
+      const logoY = 72;
 
-        ctx.drawImage(logo, startX + dailyWidth + gap, logoY, logoSize, logoSize);
+      // Círculo principal
+      ctx.beginPath();
+      ctx.arc(logoX, logoY, 26, 0, Math.PI * 2);
+      ctx.fillStyle = '#c9a227';
+      ctx.fill();
 
-        ctx.fillText('Planet', startX + dailyWidth + gap + logoSize + gap, 85);
-      } else {
-        ctx.fillText('Daily Planet', 500, 85);
-      }
+      // Anéis
+      ctx.strokeStyle = '#f4efe6';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.ellipse(logoX, logoY, 28, 12, -0.4, 0, Math.PI * 2);
+      ctx.stroke();
 
+      ctx.beginPath();
+      ctx.ellipse(logoX, logoY, 28, 12, 0.4, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Continentes simples
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.arc(logoX - 6, logoY - 4, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(logoX + 8, logoY + 5, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#f4efe6';
+      ctx.fillText(planet, startX + dailyWidth + gap + logoSize + gap, 82);
+
+      // Subtítulo
       ctx.font = '12px Georgia';
       ctx.textAlign = 'center';
       ctx.fillText('A GREAT METROPOLITAN NEWSPAPER  •  METROPOLIS', 500, 118);
@@ -144,12 +160,13 @@ module.exports = {
         drawImageCover(ctx, img, 530, contentY, 410, 240);
       }
 
-      // Imagem 2 - quadrada (1:1) mais embaixo
-      const img2Size = 320; // 1:1
-      const img2Y = 1080;
+      // Imagem 2 - 4:3 mais embaixo (esquerda)
+      const img2W = 420;
+      const img2H = 315; // 4:3
+      const img2Y = 1020;
       if (hasImg2) {
         const img = await loadImage(image2.url);
-        drawImageCover(ctx, img, 55, img2Y, img2Size, img2Size);
+        drawImageCover(ctx, img, 55, img2Y, img2W, img2H);
       }
 
       // ========== TEXTO ==========
@@ -166,14 +183,13 @@ module.exports = {
       const leftX = 55;
       const rightX = 530;
       const lineHeight = 21;
-      const maxTextY = hasImg2 ? img2Y - 15 : 1360;
 
       let leftY = contentY + 18;
       let rightY = hasImg1 ? contentY + 255 : contentY + 18;
       let i = 0;
 
-      // Coluna esquerda ao lado da imagem 1
-      while (i < allLines.length && leftY < (hasImg1 ? contentY + 250 : maxTextY)) {
+      // 1) Coluna esquerda ao lado da imagem 1
+      while (i < allLines.length && leftY < (hasImg1 ? contentY + 250 : 1000)) {
         if (allLines[i] !== '') {
           ctx.fillStyle = '#1a1a1a';
           ctx.font = '15px Georgia';
@@ -184,30 +200,45 @@ module.exports = {
         i++;
       }
 
-      // Continua preenchendo as duas colunas
-      while (i < allLines.length) {
-        let placed = false;
+      // 2) Preenche as duas colunas até a altura da imagem 2
+      const limitBeforeImg2 = hasImg2 ? img2Y - 15 : 1360;
 
-        if (leftY < maxTextY) {
+      while (i < allLines.length) {
+        if (leftY < limitBeforeImg2) {
           if (allLines[i] !== '') {
             ctx.fillStyle = '#1a1a1a';
             ctx.font = '15px Georgia';
             ctx.fillText(allLines[i], leftX, leftY);
           }
           leftY += allLines[i] === '' ? 8 : lineHeight;
-          placed = true;
-        } else if (rightY < maxTextY) {
+          i++;
+        } else if (rightY < limitBeforeImg2) {
           if (allLines[i] !== '') {
             ctx.fillStyle = '#1a1a1a';
             ctx.font = '15px Georgia';
             ctx.fillText(allLines[i], rightX, rightY);
           }
           rightY += allLines[i] === '' ? 8 : lineHeight;
-          placed = true;
+          i++;
+        } else {
+          break;
         }
+      }
 
-        if (!placed) break;
-        i++;
+      // 3) Texto ao lado da imagem 2 (coluna direita)
+      if (hasImg2) {
+        let sideY = img2Y + 10;
+        const sideMax = img2Y + img2H - 10;
+
+        while (i < allLines.length && sideY < sideMax) {
+          if (allLines[i] !== '') {
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = '15px Georgia';
+            ctx.fillText(allLines[i], rightX, sideY);
+          }
+          sideY += allLines[i] === '' ? 8 : lineHeight;
+          i++;
+        }
       }
 
       // ========== RODAPÉ ==========
@@ -236,7 +267,7 @@ module.exports = {
   }
 };
 
-function wrapText(ctx, text, maxWidth, fontSize) {
+function wrapText(ctx, text, maxWidth) {
   const words = text.split(' ');
   const lines = [];
   let current = '';
@@ -281,4 +312,4 @@ function drawImageCover(ctx, img, x, y, w, h) {
   ctx.strokeStyle = '#222';
   ctx.lineWidth = 2;
   ctx.strokeRect(x, y, w, h);
-}
+        }
