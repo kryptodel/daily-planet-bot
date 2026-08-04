@@ -1,6 +1,9 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 
+// ========== COLE O LINK DA SUA LOGO AQUI ==========
+const LOGO_URL = 'https://cdn.discordapp.com/attachments/1525521626047713442/1534185173783154808/Novo_projeto_73_C3F53FF.png?ex=6a7334c9&is=6a71e349&hm=714d8259a3861317b5e9b6333f541358afe5ec304eb39cfce2766a445430a967&'; // ← troque por seu link
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('headline')
@@ -48,23 +51,53 @@ module.exports = {
 
       // ========== MASTHEAD ==========
       ctx.fillStyle = '#111';
-      ctx.fillRect(30, 30, 940, 95);
+      ctx.fillRect(30, 30, 940, 100);
+
+      // Carrega a logo
+      let logo = null;
+      try {
+        logo = await loadImage(LOGO_URL);
+      } catch (e) {
+        console.log('Logo não carregou, usando texto puro');
+      }
 
       ctx.fillStyle = '#f4efe6';
-      ctx.font = 'bold 48px Georgia';
+      ctx.font = 'bold 46px Georgia';
       ctx.textAlign = 'center';
-      ctx.fillText('Daily Planet', 500, 85);
 
-      ctx.font = '13px Georgia';
-      ctx.fillText('A GREAT METROPOLITAN NEWSPAPER  •  METROPOLIS', 500, 110);
+      if (logo) {
+        // "Daily" + logo + "Planet"
+        const logoSize = 58;
+        const gap = 12;
 
+        const dailyWidth = ctx.measureText('Daily').width;
+        const planetWidth = ctx.measureText('Planet').width;
+        const totalWidth = dailyWidth + gap + logoSize + gap + planetWidth;
+        const startX = 500 - totalWidth / 2;
+
+        ctx.textAlign = 'left';
+        ctx.fillText('Daily', startX, 88);
+
+        ctx.drawImage(logo, startX + dailyWidth + gap, 48, logoSize, logoSize);
+
+        ctx.fillText('Planet', startX + dailyWidth + gap + logoSize + gap, 88);
+      } else {
+        ctx.fillText('Daily Planet', 500, 88);
+      }
+
+      ctx.font = '12px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('A GREAT METROPOLITAN NEWSPAPER  •  METROPOLIS', 500, 118);
+
+      // Linha dourada
       ctx.strokeStyle = '#c9a227';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.moveTo(40, 140);
-      ctx.lineTo(960, 140);
+      ctx.moveTo(40, 145);
+      ctx.lineTo(960, 145);
       ctx.stroke();
 
+      // Volume + Data
       const today = new Date().toLocaleDateString('en-US', {
         year: 'numeric', month: 'long', day: 'numeric'
       });
@@ -72,9 +105,9 @@ module.exports = {
       ctx.fillStyle = '#333';
       ctx.font = '13px Georgia';
       ctx.textAlign = 'left';
-      ctx.fillText('Volume 12  |  Issue 47', 45, 162);
+      ctx.fillText('Volume 12  |  Issue 47', 45, 168);
       ctx.textAlign = 'right';
-      ctx.fillText(today, 955, 162);
+      ctx.fillText(today, 955, 168);
 
       // ========== TÍTULO ==========
       ctx.fillStyle = '#111';
@@ -82,7 +115,7 @@ module.exports = {
       ctx.textAlign = 'center';
 
       const titleLines = wrapText(ctx, title.toUpperCase(), 900, 34);
-      let titleY = 205;
+      let titleY = 210;
       for (const line of titleLines.slice(0, 3)) {
         ctx.fillText(line, 500, titleY);
         titleY += 40;
@@ -106,17 +139,17 @@ module.exports = {
       const hasImg1 = image1 && image1.contentType?.startsWith('image/');
       const hasImg2 = image2 && image2.contentType?.startsWith('image/');
 
-      // Imagem 1 - topo direita
+      // Imagem 1 - topo direita (média)
       if (hasImg1) {
         const img = await loadImage(image1.url);
-        drawImageCover(ctx, img, 530, contentY, 410, 250);
+        drawImageCover(ctx, img, 530, contentY, 410, 240);
       }
 
-      // Imagem 2 - posição fixa mais embaixo (garantida)
-      let img2Y = 980;
+      // Imagem 2 - mais embaixo, tamanho menor (não banner)
+      const img2Y = 1050;
       if (hasImg2) {
         const img = await loadImage(image2.url);
-        drawImageCover(ctx, img, 55, img2Y, 890, 230);
+        drawImageCover(ctx, img, 55, img2Y, 480, 220); // menor e mais natural
       }
 
       // ========== TEXTO ==========
@@ -127,20 +160,20 @@ module.exports = {
       for (const p of paragraphs) {
         const lines = wrapText(ctx, p.trim(), 450, 15);
         allLines.push(...lines);
-        allLines.push(''); // espaço entre parágrafos
+        allLines.push('');
       }
 
       const leftX = 55;
       const rightX = 530;
       const lineHeight = 21;
-      const maxTextY = hasImg2 ? img2Y - 20 : 1360;
+      const maxTextY = hasImg2 ? img2Y - 15 : 1360;
 
       let leftY = contentY + 18;
-      let rightY = hasImg1 ? contentY + 265 : contentY + 18; // começa abaixo da img1
+      let rightY = hasImg1 ? contentY + 255 : contentY + 18;
       let i = 0;
 
-      // Primeiro preenche a esquerda ao lado da imagem 1
-      while (i < allLines.length && leftY < (hasImg1 ? contentY + 260 : maxTextY)) {
+      // Coluna esquerda ao lado da imagem 1
+      while (i < allLines.length && leftY < (hasImg1 ? contentY + 250 : maxTextY)) {
         if (allLines[i] !== '') {
           ctx.fillStyle = '#1a1a1a';
           ctx.font = '15px Georgia';
@@ -151,7 +184,7 @@ module.exports = {
         i++;
       }
 
-      // Depois preenche as duas colunas abaixo
+      // Continua preenchendo as duas colunas
       while (i < allLines.length) {
         let placed = false;
 
@@ -248,4 +281,4 @@ function drawImageCover(ctx, img, x, y, w, h) {
   ctx.strokeStyle = '#222';
   ctx.lineWidth = 2;
   ctx.strokeRect(x, y, w, h);
-}
+  }
