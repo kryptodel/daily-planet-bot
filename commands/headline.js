@@ -7,7 +7,7 @@ module.exports = {
     .setDescription('Generate an official Daily Planet newspaper page')
     .addStringOption(opt =>
       opt.setName('title')
-        .setDescription('Article headline')
+        .setDescription('Headline title')
         .setRequired(true)
     )
     .addStringOption(opt =>
@@ -17,12 +17,12 @@ module.exports = {
     )
     .addAttachmentOption(opt =>
       opt.setName('image1')
-        .setDescription('Main image (top right)')
+        .setDescription('Main photo (top right) - image or GIF')
         .setRequired(false)
     )
     .addAttachmentOption(opt =>
       opt.setName('image2')
-        .setDescription('Second image (lower section - 4:3)')
+        .setDescription('Second photo (bottom - 4:3) - image or GIF')
         .setRequired(false)
     ),
 
@@ -62,11 +62,11 @@ module.exports = {
       const startX = 500 - totalWidth / 2;
 
       ctx.fillText(daily, startX, 82);
+
       const logoX = startX + dailyWidth + gap + logoSize / 2;
       const logoY = 68;
       const r = 28;
 
-      // Globo
       ctx.beginPath();
       ctx.arc(logoX, logoY, r, 0, Math.PI * 2);
       ctx.fillStyle = '#e8b923';
@@ -275,7 +275,7 @@ module.exports = {
 
     } catch (error) {
       console.error(error);
-      await interaction.editReply({ content: '❌ Falha ao gerar a página do jornal.' });
+      await interaction.editReply({ content: '❌ Failed to generate the newspaper page.' });
     }
   }
 };
@@ -321,8 +321,4 @@ function drawImageCover(ctx, img, x, y, w, h) {
   ctx.clip();
   ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
   ctx.restore();
-
-  ctx.strokeStyle = '#222';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(x, y, w, h);
-}
+    }
