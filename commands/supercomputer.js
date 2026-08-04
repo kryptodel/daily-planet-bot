@@ -72,7 +72,7 @@ module.exports = {
         { name: 'Query', value: query, inline: false },
         { name: 'Analysis Result', value: answer, inline: false }
       )
-      .setFooter({ text: 'Kryptonian OS • Crystal Core • Access Authorized' })
+      .setFooter({ text: 'Daily Planet • Metropolis • Access Authorized' })
       .setTimestamp();
 
     const gifPath = path.join(__dirname, '..', 'supercomputer.gif');
