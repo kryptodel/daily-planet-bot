@@ -146,18 +146,21 @@ client.on('messageCreate', async message => {
     const selectedGif = gifs[Math.floor(Math.random() * gifs.length)];
 
     const embed = new EmbedBuilder()
-      .setColor(0x32CD32)
-      .setTitle('⌚ IT\'S HERO TIME! 🟢')
-      .setDescription(
-        `**${message.author}** activated the Omnitrix!\n\n` +
-        `*Choose your hero. Save the day.*`
-      )
-      .setImage(`attachment://${selectedGif}`)
-      .setFooter({
-        text: 'Ben 10 • Hero Time',
-        iconURL: message.author.displayAvatarURL()
-      })
-      .setTimestamp();
+  .setColor(0x39FF14) 
+  .setTitle('🟢 OMNITRIX SIGNAL DETECTED')
+  .setDescription(
+    `## ⚡ IT'S HERO TIME!\n\n` +
+    `**👤 User:** ${message.author}\n` +
+    `**📡 Status:** Transformation Initiated...\n` +
+    `**⚡ Power Level:** ██████████ **100%**\n\n` +
+    `> *Choose your alien... and save the day!*`
+  )
+  .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
+  .setImage(`attachment://${selectedGif}`)
+  .setFooter({
+    text: 'Ben 10 • The Universe Needs a Hero'
+  })
+  .setTimestamp();
 
     await message.reply({
       embeds: [embed],
