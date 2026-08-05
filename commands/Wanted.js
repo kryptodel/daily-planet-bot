@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
+const path = require('path');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -34,7 +35,8 @@ module.exports = {
       const canvas = createCanvas(900, 1300);
       const ctx = canvas.getContext('2d');
 
-      const paper = await loadImage('https://cdn.discordapp.com/attachments/1525521626047713442/1532786886534365264/36cb406532ca909724daffd01f08ba27.jpg');
+      const paperPath = path.join(__dirname, '..' 'wanted.jpg');
+      const paper = await loadImage(paperPath);
       ctx.drawImage(paper, 0, 0, 900, 1300);
 
       const vignette = ctx.createRadialGradient(450, 650, 300, 450, 650, 750);
