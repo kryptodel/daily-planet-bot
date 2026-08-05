@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 const path = require('path');
+const fs = require('fs');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -35,9 +36,26 @@ module.exports = {
       const canvas = createCanvas(900, 1300);
       const ctx = canvas.getContext('2d');
 
-      const paperPath = path.join(__dirname, '..', 'wanted.jpg');
-      const paper = await loadImage(paperPath);
-      ctx.drawImage(paper, 0, 0, 900, 1300);
+      const paperPath = path.join(__dirname, '..', 'wanted.jpg);
+      console.log('Paper path:', paperPath);
+      console.log('Exists:', fs.existsSync(paperPath));
+
+      try {
+        if (fs.existsSync(paperPath)) {
+          const paper = await loadImage(paperPath);
+          ctx.drawImage(paper, 0, 0, 900, 1300);
+        } else {
+          throw new Error('File not found');
+        }
+      } catch (e) {
+        console.log('Usando fundo gerado:', e.message);
+        ctx.fillStyle = '#e8d9b5';
+        ctx.fillRect(0, 0, 900, 1300);
+        for (let i = 0; i < 14000; i++) {
+          ctx.fillStyle = `rgba(90, 55, 25, ${Math.random() * 0.08})`;
+          ctx.fillRect(Math.random() * 900, Math.random() * 1300, 1.6, 1.6);
+        }
+      }
 
       const vignette = ctx.createRadialGradient(450, 650, 300, 450, 650, 750);
       vignette.addColorStop(0, 'rgba(0,0,0,0)');
