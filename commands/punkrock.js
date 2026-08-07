@@ -72,12 +72,9 @@ module.exports = {
 
     const finalEmbed = new EmbedBuilder()
       .setColor(color)
-      .setAuthor({
-        name: name,
-        iconURL: target.displayAvatarURL({ size: 128 })
-      })
       .setTitle('Punk Rock Meter')
-      .setDescription('### ' + percentage + '% Punk Rock\n`' + resultBar + '`\n\n**' + rank + '**\n' + phrase)
+      .setDescription('**' + name + '**\n\n### ' + percentage + '% Punk Rock\n`' + resultBar + '`\n\n**' + rank + '**\n' + phrase)
+      .setThumbnail(target.displayAvatarURL({ size: 512 }))
       .setFooter({ text: 'Daily Planet • Truth, Justice & a Little Rebellion' })
       .setTimestamp();
 
