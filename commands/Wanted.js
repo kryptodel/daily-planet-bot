@@ -36,7 +36,7 @@ module.exports = {
       const canvas = createCanvas(900, 1300);
       const ctx = canvas.getContext('2d');
 
-      const paperPath = path.join(__dirname, '..', 'wanted.jpg);
+      const paperPath = path.join(__dirname, '..', 'wanted.jpg');
       console.log('Paper path:', paperPath);
       console.log('Exists:', fs.existsSync(paperPath));
 
