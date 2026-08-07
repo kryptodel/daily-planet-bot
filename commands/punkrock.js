@@ -66,7 +66,7 @@ module.exports = {
       .setTitle('Punk Rock Meter')
       .setDescription('**' + name + '** is **' + percentage + '%** punk rock.\n\n' + phrase)
       .setThumbnail(target.displayAvatarURL({ size: 256 }))
-      .setFooter({ text: 'Daily Planet • Truth, Justice & a Little Rebellion' })
+      .setFooter({ text: 'Daily Planet • Metropolis' })
       .setTimestamp();
 
     const imagePath = path.join(__dirname, '..', 'punkrock.png');
