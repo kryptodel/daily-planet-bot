@@ -50,7 +50,7 @@ module.exports = {
     for (let i = 1; i <= 100; i++) {
       const filled = Math.round(i / 10);
       const bar = '▰'.repeat(filled) + '▱'.repeat(10 - filled);
-      loadingEmbed.setDescription(`Scanning **\( {name}**...\n\n\` \){bar} ${i}%\``);
+      loadingEmbed.setDescription(`Scanning **${name}**...\n\n\` ${bar} ${i}%\``);
       await interaction.editReply({ embeds: [loadingEmbed] });
       await new Promise(r => setTimeout(r, 40));
     }
@@ -58,7 +58,7 @@ module.exports = {
     const finalEmbed = new EmbedBuilder()
       .setColor(color)
       .setTitle('Punk Rock Meter')
-      .setDescription(`**\( {name}** is ** \){percentage}%** punk rock.\n\n${phrase}`)
+      .setDescription(`**${name}** is ** ${percentage}%** punk rock.\n\n${phrase}`)
       .setThumbnail(target.displayAvatarURL({ size: 256 }))
       .setFooter({ text: 'Daily Planet • Truth, Justice & a Little Rebellion' })
       .setTimestamp();
