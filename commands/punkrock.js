@@ -21,28 +21,22 @@ module.exports = {
 
     let phrase = '';
     let color = 0x1a1a2e;
-    let rank = '';
 
     if (percentage >= 90) {
       phrase = 'You still believe doing the right thing matters, even when nobody else does. That is the real rebellion.';
       color = 0xe10600;
-      rank = 'True Believer';
     } else if (percentage >= 75) {
       phrase = 'You protect people who cannot protect themselves. Quiet strength. Zero tolerance for cruelty.';
       color = 0xc41e3a;
-      rank = 'Defender';
     } else if (percentage >= 55) {
       phrase = 'You refuse to become cold just because the world is. That stubborn hope is dangerous in the best way.';
       color = 0x8b0000;
-      rank = 'Hopeful';
     } else if (percentage >= 35) {
       phrase = 'You care, but you hide it. The fire is still there, it just needs a reason to come out.';
       color = 0x4a4a4a;
-      rank = 'Fading Spark';
     } else {
       phrase = 'You have been worn down by the noise. The fight is still possible, but you stopped believing it was worth it.';
       color = 0x2b2b2b;
-      rank = 'Quiet';
     }
 
     const loadingEmbed = new EmbedBuilder()
@@ -67,14 +61,11 @@ module.exports = {
       await new Promise(r => setTimeout(r, 400));
     }
 
-    const filled = Math.round(percentage / 10);
-    const resultBar = '▰'.repeat(filled) + '▱'.repeat(10 - filled);
-
     const finalEmbed = new EmbedBuilder()
       .setColor(color)
       .setTitle('Punk Rock Meter')
-      .setDescription('**' + name + '**\n\n### ' + percentage + '% Punk Rock\n`' + resultBar + '`\n\n**' + rank + '**\n' + phrase)
-      .setThumbnail(target.displayAvatarURL({ size: 512 }))
+      .setDescription('**' + name + '** is **' + percentage + '%** punk rock.\n\n' + phrase)
+      .setThumbnail(target.displayAvatarURL({ size: 256 }))
       .setFooter({ text: 'Daily Planet • Truth, Justice & a Little Rebellion' })
       .setTimestamp();
 
