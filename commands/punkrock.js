@@ -42,23 +42,29 @@ module.exports = {
     const loadingEmbed = new EmbedBuilder()
       .setColor(0x1a1a2e)
       .setTitle('Punk Rock Meter')
-      .setDescription(`Scanning **${name}**...\n\n\`▱▱▱▱▱▱▱▱▱▱ 0%\``)
+      .setDescription('Scanning **' + name + '**...\n\n`▱▱▱▱▱▱▱▱▱▱ 0%`')
       .setFooter({ text: 'Daily Planet • Underground Analysis' });
 
     await interaction.reply({ embeds: [loadingEmbed] });
 
-    for (let i = 1; i <= 100; i++) {
-      const filled = Math.round(i / 10);
-      const bar = '▰'.repeat(filled) + '▱'.repeat(10 - filled);
-      loadingEmbed.setDescription(`Scanning **${name}**...\n\n\` ${bar} ${i}%\``);
+    const bars = [
+      ['▰▰▱▱▱▱▱▱▱▱', '20%'],
+      ['▰▰▰▰▱▱▱▱▱▱', '40%'],
+      ['▰▰▰▰▰▰▱▱▱▱', '60%'],
+      ['▰▰▰▰▰▰▰▰▱▱', '80%'],
+      ['▰▰▰▰▰▰▰▰▰▰', '100%']
+    ];
+
+    for (const [bar, percent] of bars) {
+      loadingEmbed.setDescription('Scanning **' + name + '**...\n\n`' + bar + ' ' + percent + '`');
       await interaction.editReply({ embeds: [loadingEmbed] });
-      await new Promise(r => setTimeout(r, 40));
+      await new Promise(r => setTimeout(r, 400));
     }
 
     const finalEmbed = new EmbedBuilder()
       .setColor(color)
       .setTitle('Punk Rock Meter')
-      .setDescription(`**${name}** is ** ${percentage}%** punk rock.\n\n${phrase}`)
+      .setDescription('**' + name + '** is **' + percentage + '%** punk rock.\n\n' + phrase)
       .setThumbnail(target.displayAvatarURL({ size: 256 }))
       .setFooter({ text: 'Daily Planet • Truth, Justice & a Little Rebellion' })
       .setTimestamp();
