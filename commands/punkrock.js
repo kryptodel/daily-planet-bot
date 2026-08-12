@@ -69,11 +69,11 @@ module.exports = {
       .setFooter({ text: 'Daily Planet • Metropolis' })
       .setTimestamp();
 
-    const imagePath = path.join(__dirname, '..', 'punkrock.png');
+    const imagePath = path.join(__dirname, '..', 'superman-superman-smiling.gif);
 
     if (fs.existsSync(imagePath)) {
       const file = new AttachmentBuilder(imagePath);
-      finalEmbed.setImage('attachment://punkrock.png');
+      finalEmbed.setImage('attachment://superman-superman-smiling.gif');
       await interaction.editReply({ embeds: [finalEmbed], files: [file] });
     } else {
       await interaction.editReply({ embeds: [finalEmbed] });
