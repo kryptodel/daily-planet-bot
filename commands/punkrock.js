@@ -69,7 +69,7 @@ module.exports = {
       .setFooter({ text: 'Daily Planet • Metropolis' })
       .setTimestamp();
 
-    const imagePath = path.join(__dirname, '..', 'superman-superman-smiling.gif);
+    const imagePath = path.join(__dirname, '..', 'superman-superman-smiling.gif');
 
     if (fs.existsSync(imagePath)) {
       const file = new AttachmentBuilder(imagePath);
