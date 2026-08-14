@@ -125,7 +125,6 @@ module.exports = {
         result.description + '\n\n' +
         '**Oath:**\n```\n' + result.oath + '\n```'
       )
-      .setThumbnail(target.displayAvatarURL({ size: 512 }))
       .setFooter({ text: 'Daily Planet • Emotional Spectrum Division' })
       .setTimestamp();
 
